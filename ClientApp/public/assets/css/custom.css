@@ -1,0 +1,20 @@
+﻿body{
+    color:white !important;
+}
+a {
+    text-decoration: none !important;
+}
+
+.page-header-section {
+    background: url(../images/page-header.jpg);
+}
+
+.footer-middle {
+    background : url(../images/footer/bg.png);
+}
+
+.grid-memberlist {
+    display: flex;
+    flex-flow: wrap;
+}
+ 
