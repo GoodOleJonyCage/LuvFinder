@@ -1,6 +1,27 @@
+import  { useEffect,useState } from 'react'
+import { LoadingDiv } from './LoadingDiv'
+import { LoadProfile } from '../Services/Services'
 
 
-export const  Profile = () => {
+export const Profile = () => {
+
+    const [questions, setquestions] = useState([]);
+
+    const LoadData = async () => {
+
+        try {
+            const vm = await LoadProfile();
+            console.log(vm);
+            setquestions(vm);
+        } catch (e) {
+
+        }
+    }
+
+    useEffect(() => {
+        LoadData();
+    }, []);
+
 
     return <section className="profile-section padding-tb">
         <div className="container">
@@ -32,7 +53,7 @@ export const  Profile = () => {
                             </div>
                             <ul className="profile-contact">
                                 <li>
-                                    <a href="#">
+                                    <a href="/#">
                                         <div className="icon"><i className="icofont-user"></i></div>
                                         <div className="text">
                                             <p>Add Friends</p>
@@ -40,7 +61,7 @@ export const  Profile = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="/#">
                                         <div className="icon"><i className="icofont-envelope"></i></div>
                                         <div className="text">
                                             <p>Public Message</p>
@@ -48,7 +69,7 @@ export const  Profile = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="/#">
                                         <div className="icon"><i className="icofont-envelope"></i></div>
                                         <div className="text">
                                             <p>Private Message</p>
@@ -62,7 +83,7 @@ export const  Profile = () => {
                     <div className="profile-item d-none">
                         <div className="lab-inner">
                             <div className="lab-thumb">
-                                <a href="#"><img src="assets/images/profile/Profile.jpg" alt="profile"/></a>
+                                <a href="/#"><img src="assets/images/profile/Profile.jpg" alt="profile"/></a>
                             </div>
                             <div className="lab-content">
                                 <div className="profile-name">
@@ -79,7 +100,7 @@ export const  Profile = () => {
                                 </div>
                                 <ul className="profile-contact">
                                     <li>
-                                        <a href="#">
+                                        <a href="/#">
                                             <div className="icon"><i className="icofont-user"></i></div>
                                             <div className="text">
                                                 <p>Add Friends</p>
@@ -87,7 +108,7 @@ export const  Profile = () => {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="/#">
                                             <div className="icon"><i className="icofont-envelope"></i></div>
                                             <div className="text">
                                                 <p>Publice Message</p>
@@ -95,7 +116,7 @@ export const  Profile = () => {
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#">
+                                        <a href="/#">
                                             <div className="icon"><i className="icofont-envelope"></i></div>
                                             <div className="text">
                                                 <p>Private Message</p>
@@ -128,15 +149,15 @@ export const  Profile = () => {
                                     type="button" role="tab" aria-controls="media" aria-selected="false">Media <span
                                         className="item-number">35</span></button>
                                 <div className="dropdown">
-                                    <a className="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    <a className="btn dropdown-toggle" href="/#" role="button" id="dropdownMenuLink"
                                         data-bs-toggle="dropdown" aria-expanded="false">
                                         More
                                     </a>
 
                                     <ul className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <li><a className="dropdown-item" href="#">Activity</a></li>
-                                        <li><a className="dropdown-item" href="#">Privacy</a></li>
-                                        <li><a className="dropdown-item" href="#">Block user</a></li>
+                                        <li><a className="dropdown-item" href="/#">Activity</a></li>
+                                        <li><a className="dropdown-item" href="/#">Privacy</a></li>
+                                        <li><a className="dropdown-item" href="/#">Block user</a></li>
                                     </ul>
                                 </div>
 
@@ -1509,7 +1530,32 @@ export const  Profile = () => {
                                 <div>
                                     <div className="row">
                                         <div className="col-xl-8">
+        {/*make a new component called ProfileQuestionnnaire */}
                                             <article>
+                                                {
+                                                    questions.length === 0 ? <LoadingDiv/> :
+                                                    questions.map((q,index) => {
+                                                            return <div className="info-card mb-20">
+                                                                <div className="info-card-title">
+                                                                    <h6>{q.question.shortDesc}</h6>
+                                                                </div>
+                                                                <div className="info-card-content">
+                                                                    <ul className="info-list">
+                                                                        <li>
+                                                                            <p className="info-name">{q.question.text}</p>
+                                                                            <p className="info-details">
+                                                                                {q.question.answers.map((a,aindex) => {
+                                                                                    return <div> {a.text} </div>
+                                                                                    })
+                                                                                }
+                                                                            </p>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        })
+                                                     
+                                                 }
                                                 <div className="info-card mb-20">
                                                     <div className="info-card-title">
                                                         <h6>Base Info</h6>
@@ -1546,7 +1592,6 @@ export const  Profile = () => {
                                                                     USA.</p>
                                                             </li>
                                                         </ul>
-
                                                     </div>
                                                 </div>
                                                 <div className="info-card mb-20">
