@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace LuvFinder.Models;
+
+public partial class Profile
+{
+    public int Id { get; set; }
+
+    public int QuestionId { get; set; }
+
+    public virtual Question Question { get; set; } = null!;
+}
