@@ -27,7 +27,7 @@ export const Login = () => {
                             </div>
                         </form>
                         <div className="account-bottom">
-                            <span className="d-block cate pt-10">Don’t Have any Account? <a href="signup.html"> Sign
+                            <span className="d-block cate pt-10">Don’t Have any Account? <a href="/register"> Sign
                                 Up</a></span>
                             <span className="or"><span>or</span></span>
                             <h5 className="subtitle">Login With Social Media</h5>
