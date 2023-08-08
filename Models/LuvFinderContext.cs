@@ -49,6 +49,8 @@ public partial class LuvFinderContext : DbContext
         {
             entity.ToTable("Answer");
 
+            entity.HasIndex(e => e.QuestionId, "IDX_Answer_QuestionID");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
             entity.Property(e => e.Text)
@@ -169,6 +171,8 @@ public partial class LuvFinderContext : DbContext
 
         modelBuilder.Entity<UserLike>(entity =>
         {
+            entity.HasIndex(e => e.FromId, "IDX_UserLikes_FromID");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
@@ -189,6 +193,8 @@ public partial class LuvFinderContext : DbContext
 
         modelBuilder.Entity<UserMessage>(entity =>
         {
+            entity.HasIndex(e => e.FromId, "IDX_UserMessages_FromID");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
@@ -213,6 +219,8 @@ public partial class LuvFinderContext : DbContext
         modelBuilder.Entity<UserProfile>(entity =>
         {
             entity.ToTable("UserProfile");
+
+            entity.HasIndex(e => e.UserId, "IDX_UserProfile_UserID");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnswerId).HasColumnName("AnswerID");
@@ -242,6 +250,8 @@ public partial class LuvFinderContext : DbContext
 
         modelBuilder.Entity<UserViewing>(entity =>
         {
+            entity.HasIndex(e => e.UserViewingId, "IDX_UserViewings_UserViewingID");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
@@ -252,12 +262,12 @@ public partial class LuvFinderContext : DbContext
             entity.HasOne(d => d.UserViewed).WithMany(p => p.UserViewingUserVieweds)
                 .HasForeignKey(d => d.UserViewedId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_UserViewings_User2");
+                .HasConstraintName("FK_UserViewings_User4");
 
             entity.HasOne(d => d.UserViewingNavigation).WithMany(p => p.UserViewingUserViewingNavigations)
                 .HasForeignKey(d => d.UserViewingId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_UserViewings_User");
+                .HasConstraintName("FK_UserViewings_User3");
         });
 
         OnModelCreatingPartial(modelBuilder);
