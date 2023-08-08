@@ -224,13 +224,12 @@ public partial class LuvFinderContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AnswerId).HasColumnName("AnswerID");
-            entity.Property(e => e.AnswerText)
-                .HasMaxLength(1000)
-                .IsUnicode(false);
+            entity.Property(e => e.AnswerText).HasColumnType("text");
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.QuestionId).HasColumnName("QuestionID");
+            entity.Property(e => e.Selected).HasDefaultValueSql("((0))");
             entity.Property(e => e.UserId).HasColumnName("UserID");
 
             entity.HasOne(d => d.Answer).WithMany(p => p.UserProfiles)

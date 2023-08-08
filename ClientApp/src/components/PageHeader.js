@@ -1,3 +1,102 @@
+import { useLocation } from "react-router-dom";
+
+const GetBreadCrumbPath = () => {
+
+    let path = "/";
+    const location = useLocation();
+    switch (location.pathname) {
+
+        case "/":
+            path = "/login";
+            break;
+        case "/login":
+            path = "/login";
+            break;
+
+        case "/register":
+            path = "/register";
+            break;
+
+        case "/profile":
+            path = "/profile";
+            break;
+
+        case "/createprofile":
+            path = "/createprofile";
+            break;
+
+        default:
+            path = "/";
+            break;
+    }
+    return  path;
+}
+
+const GetHeaderTitle = () => {
+
+    let path = "/";
+    const location = useLocation();
+    switch (location.pathname) {
+
+        case "/":
+            path = "Home";
+            break;
+        case "/login":
+            path = "Login";
+            break;
+
+        case "/register":
+            path = "Register";
+            break;
+
+        case "/profile":
+            path = "Profile";
+            break;
+
+        case "/createprofile":
+            path = "CreateProfile";
+            break;
+
+        default:
+            path = "/";
+            break;
+    }
+    return path;
+}
+
+const GetBreadCrumbTitle = () => {
+
+    let path = "/";
+    const location = useLocation();
+    switch (location.pathname) {
+
+        case "/":
+            path = "Login";
+            break;
+        case "/login":
+            path = "Login";
+            break;
+
+        case "/register":
+            path = "Register";
+            break;
+
+        case "/profile":
+            path = "Profile";
+            break;
+
+        case "/createprofile":
+            path = "CreateProfile";
+            break;
+
+        default:
+            path = "/";
+            break;
+    }
+    return path;
+}
+
+
 
 export const PageHeader = () => {
 
@@ -6,13 +105,13 @@ export const PageHeader = () => {
             <div className="page-header-content">
                 <div className="page-header-inner">
                     <div className="page-title">
-                        <h2>TuruLav Login Page</h2>
+                        <h2>TuruLav {GetHeaderTitle()} Page</h2>
                     </div>
                     <ol className="breadcrumb">
                         <li><a href="/">Home</a></li>
+                        <li>></li>
                         <li className="active">
-                            <a href="/login">Login</a></li>
-                            
+                            <a href={GetBreadCrumbPath()}>{GetBreadCrumbTitle()}</a></li>
                     </ol>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container } from 'reactstrap';
+/*import { Container } from 'reactstrap';*/
 import { Header } from './Header';
 import { Footer } from './Footer';
 /*import { NavMenu } from './NavMenu';*/

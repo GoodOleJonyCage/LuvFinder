@@ -1,20 +1,82 @@
-﻿body{
-    color:white !important;
+﻿body * {
+    color: white;
 }
-a {
-    text-decoration: none !important;
+
+body a {
+    text-decoration: none;
 }
 
 .page-header-section {
     background: url(../images/page-header.jpg);
+    
 }
 
 .footer-middle {
-    background : url(../images/footer/bg.png);
+    background: url(../images/footer/bg.png);
 }
 
 .grid-memberlist {
     display: flex;
     flex-flow: wrap;
 }
- 
+
+.highlight-error{
+
+    font-weight:bold;
+    color:red;
+}
+
+.form-group input.highlight-field {
+    border-color: red;
+    border-width: 2px;
+    border-radius: 5px;
+}
+
+.profilequestionnaire-container {
+   margin-top: 20px;
+}
+
+.breadcrumb li a::before{
+    background:none !important;
+}
+
+.info-card .info-card-content .info-list li .info-name:after {
+    content: "";
+}
+
+.loader{
+    font-size:larger;
+    color:red;
+    font-weight:bold;
+    text-align:center;
+    text-transform:uppercase;
+    letter-spacing:2px;
+}
+
+.profilequestionnaire-textarea{
+    width:75%;
+    color:black;
+    padding:20px;
+}
+
+.questionnaire_Control_container {
+    display: flex;
+    flex-flow: wrap;
+}
+
+    .questionnaire_Control_container label {
+        display: flex;
+        flex-direction: row;
+        line-height: 20px;
+        margin-bottom: 20px;
+    }
+
+    .questionnaire_Control_container input {
+        width:100px;
+        flex: 0 0 40px;
+    }
+
+.profilequestionnaire-container .lab-btn {
+    line-height: 30px;
+    
+}

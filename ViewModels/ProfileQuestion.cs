@@ -24,6 +24,7 @@ namespace LuvFinder.ViewModels
     public class Answer
     {
         public int ID { get; set; }
+        public bool Selected { get; set; }
         public string Text { get; set; } = string.Empty;
     }
     

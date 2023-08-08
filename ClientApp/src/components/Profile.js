@@ -1,28 +1,5 @@
-import  { useEffect,useState } from 'react'
-import { LoadingDiv } from './LoadingDiv'
-import { LoadProfile } from '../Services/Services'
-
 
 export const Profile = () => {
-
-    const [questions, setquestions] = useState([]);
-
-    const LoadData = async () => {
-
-        try {
-            const vm = await LoadProfile();
-            console.log(vm);
-            setquestions(vm);
-        } catch (e) {
-
-        }
-    }
-
-    useEffect(() => {
-        LoadData();
-    }, []);
-
-
     return <section className="profile-section padding-tb">
         <div className="container">
             <div className="section-wrapper">
@@ -1530,32 +1507,7 @@ export const Profile = () => {
                                 <div>
                                     <div className="row">
                                         <div className="col-xl-8">
-        {/*make a new component called ProfileQuestionnnaire */}
                                             <article>
-                                                {
-                                                    questions.length === 0 ? <LoadingDiv/> :
-                                                    questions.map((q,index) => {
-                                                            return <div className="info-card mb-20">
-                                                                <div className="info-card-title">
-                                                                    <h6>{q.question.shortDesc}</h6>
-                                                                </div>
-                                                                <div className="info-card-content">
-                                                                    <ul className="info-list">
-                                                                        <li>
-                                                                            <p className="info-name">{q.question.text}</p>
-                                                                            <p className="info-details">
-                                                                                {q.question.answers.map((a,aindex) => {
-                                                                                    return <div> {a.text} </div>
-                                                                                    })
-                                                                                }
-                                                                            </p>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        })
-                                                     
-                                                 }
                                                 <div className="info-card mb-20">
                                                     <div className="info-card-title">
                                                         <h6>Base Info</h6>

@@ -2,7 +2,10 @@
 using LuvFinder.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using NuGet.Packaging.Signing;
 using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LuvFinder.Controllers
 {
@@ -15,6 +18,12 @@ namespace LuvFinder.Controllers
         //{
         //    return View();
         //}
+
+        private readonly LuvFinderContext db;
+        public ProfileController(LuvFinderContext _db) {
+
+            db = _db;
+        }  
 
         [HttpGet]
         [Route("profilequestionnaire")]
@@ -48,14 +57,79 @@ namespace LuvFinder.Controllers
             }
             return Ok(lst);
         }
+        
+        [HttpPost]
+        [Route("profilesaved")]
+        public ActionResult SaveProfile([FromBody] System.Text.Json.JsonElement param)
+        {
+            var username = param.GetProperty("username").ToString();
+            var vm = JsonConvert.DeserializeObject<List<ViewModels.ProfileQuestion>>(param.GetProperty("vm").ToString());
+            var userID = (new UserController()).UserIDByName(username);
 
-        //[Route("profilequestionnaire")]
-        //public ActionResult SaveProfile([FromBody] System.Text.Json.JsonElement param)
-        //{
+            List<string> lstErrors = new List<string>();
+            userID = 1;
+            if (userID == 0 )
+                return BadRequest("User Not found");
+            
+            if (vm != null)
+            {
+                vm.ToList().ForEach(question =>
+                {
+                    bool questionReponseInvalid = false;
+                    if (question.Question.QuestionType == ViewModels.QuestionType.OpenText)
+                    {
+                        if (string.IsNullOrEmpty(question.AnswerText))
+                            questionReponseInvalid = true;
+                    }
+                    else
+                    {
+                        if (question.Question.Answers.All(ans => !ans.Selected))
+                        {
+                            questionReponseInvalid = true;
+                        }
+                    }
+                    
+                    if (questionReponseInvalid)
+                    {
+                        lstErrors.Add($"Value required for {question.Question.ShortDesc}");
+                    }
+                    else
+                    {
+                        if ( question.Question.Answers.Count == 0 ) {
 
-        //    var vm =  (object)param.GetProperty("vm") as List<ViewModels.ProfileQuestion>;
+                            db.UserProfiles.Add(new UserProfile()
+                            {
+                                UserId = userID,
+                                QuestionId = question.Question.QuestionID,
+                                AnswerText = string.IsNullOrEmpty(question.AnswerText) ? string.Empty : question.AnswerText,
+                                Selected = false
+                            });
+                        }
+                        else
+                        question.Question.Answers.ForEach(answer =>
+                        {
+                            db.UserProfiles.Add(new UserProfile()
+                            {
+                                UserId = userID,
+                                QuestionId = question.Question.QuestionID,
+                                AnswerId = answer.ID,
+                                AnswerText = string.Empty,
+                                Selected = answer.Selected
+                            });
+                        });
+                    }
+                });
 
-        //    return View();
-        //}
+                if (lstErrors.Count == 0)
+                {
+                    db.UserProfiles.RemoveRange(db.UserProfiles.Where(u => u.UserId == userID).ToList());
+                    db.SaveChanges();
+                }
+                else
+                    return BadRequest(lstErrors);
+            }
+            
+            return Ok(true);
+        }
     }
 }

@@ -2,5 +2,5 @@
 
 export const LoadingDiv = () => {
 
-    return <div>Loading</div>
+    return <div className="loader">Loading....</div>
 }
