@@ -1,17 +1,52 @@
-
+import { useState } from 'react';
+import { LoginUser } from '../Services/Services'
 
 export const Login = () => {
+
+    const [username, setusername] = useState('');
+    const [password, setpassword] = useState('');
+    const [result, setresult] = useState('');
+    const [submitted, setsubmitted] = useState(false);
+
+    const handleSubmit = async (e) => {
+
+        setresult('');
+        setsubmitted(true);
+
+        if (username.length > 0 && password.length > 0) {
+
+            try {
+
+                const userExists = await LoginUser(username, password);
+                console.log(userExists);
+                if (userExists)
+                    window.location.href = '/';//?username=' + username;
+
+            } catch (response) {
+                response.json().then(error => {
+                    //console.log(error);
+                    setresult(error);
+                })
+            }
+        }
+    }
 
     return <div className="login-section padding-tb">
                 <div className=" container">
                     <div className="account-wrapper">
                         <h3 className="title">Login</h3>
-                        <form className="account-form">
+                        <div className="account-form">
                             <div className="form-group">
-                                <input type="text" placeholder="User Name" name="username" />
+                            <input
+                            onChange={(e) => { setusername(e.target.value) }}
+                            className={submitted && !username ? "highlight-field" : ""}
+                            type="text" placeholder="User Name" name="username" />
                             </div>
                             <div className="form-group">
-                                <input type="password" placeholder="Password" name="password" />
+                            <input
+                            onChange={(e) => { setpassword(e.target.value) }}
+                            className={submitted && !password ? "highlight-field" : ""}
+                            type="password" placeholder="Password" name="password" />
                             </div>
                             <div className="form-group">
                                 <div className="d-flex justify-content-between flex-wrap pt-sm-2">
@@ -22,10 +57,14 @@ export const Login = () => {
                                     <a href="/#">Forget Password?</a>
                                 </div>
                             </div>
-                            <div className="form-group">
-                                <button className="d-block lab-btn"><span>Submit Now</span></button>
+                            <div className="form-group highlight-error">
+                                {result}
                             </div>
-                        </form>
+                            <div className="form-group">
+                            <button onClick={handleSubmit}   type="Submit"
+                                className="d-block lab-btn">Submit Now</button>
+                            </div>
+                        </div>
                         <div className="account-bottom">
                             <span className="d-block cate pt-10">Don’t Have any Account? <a href="/register"> Sign
                                 Up</a></span>

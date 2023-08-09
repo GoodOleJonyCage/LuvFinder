@@ -64,10 +64,10 @@ namespace LuvFinder.Controllers
         {
             var username = param.GetProperty("username").ToString();
             var vm = JsonConvert.DeserializeObject<List<ViewModels.ProfileQuestion>>(param.GetProperty("vm").ToString());
-            var userID = (new UserController()).UserIDByName(username);
+            var userID = (new UserController(new LuvFinderContext())).UserIDByName(username);
 
             List<string> lstErrors = new List<string>();
-            userID = 1;
+            
             if (userID == 0 )
                 return BadRequest("User Not found");
             

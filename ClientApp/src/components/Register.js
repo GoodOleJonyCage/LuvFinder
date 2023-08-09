@@ -57,7 +57,8 @@ export const Register = () => {
                         {result}
                     </div>
                     <div className="form-group">
-                        <button className="d-block lab-btn" type="Submit" onClick={handleSubmit}>Get Started Now</button>
+                        <button className="d-block lab-btn" type="Submit"
+                            onClick={handleSubmit}>Get Started Now</button>
                     </div>
                 </div>
                 <div className="account-bottom">

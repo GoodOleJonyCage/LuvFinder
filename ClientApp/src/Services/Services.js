@@ -47,7 +47,7 @@ export const SaveProfile = async (username, vm) => {
 
 export const RegisterUser = async (username, password) => {
 
-    let response = await fetch(`user/registeruser`, {
+    let response = await fetch(`user/register`, {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -63,6 +63,30 @@ export const RegisterUser = async (username, password) => {
     if (response.ok) {
         const data = await response.json();
         console.log(data);
+        return data;
+    }
+
+    return Promise.reject(response);
+
+}
+
+export const LoginUser = async (username, password) => {
+
+    let response = await fetch(`user/login`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            username: username,
+            password: password
+        }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
         return data;
     }
 

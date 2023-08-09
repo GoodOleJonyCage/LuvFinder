@@ -10,18 +10,48 @@ namespace LuvFinder.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        public UserController() { }
 
-        private readonly LuvFinderContext? db ;
+        private readonly LuvFinderContext db ;
         public UserController(LuvFinderContext _db)
         {
             db = _db;
         }
 
+
         [AllowAnonymous]
         [HttpPost]
-        [Route("registeruser")]
-        public ActionResult RegisterUser([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        [Route("login")]
+        public ActionResult Login([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var user = new ViewModels.User()
+            {
+                UserName = userParams.GetProperty("username").ToString(),
+                Password = userParams.GetProperty("password").ToString()
+            };
+
+            //validation
+            if (string.IsNullOrEmpty(user.UserName))
+            {
+                return BadRequest("Username required");
+            }
+            if (string.IsNullOrEmpty(user.Password))
+            {
+                return BadRequest("Password required");
+            }
+
+            var userExists = db.Users.Any(u => u.Username == user.UserName && u.Password == user.Password);
+
+            if (userExists)
+                return Ok(true);
+            else
+                return BadRequest("Invalid username/password");
+                
+        }
+        
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("register")]
+        public ActionResult Register([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
         {
             var user = new ViewModels.User()
             {
@@ -74,11 +104,8 @@ namespace LuvFinder.Controllers
         }
         public int UserIDByName(string username)
         {
-            using (LuvFinderContext db = new LuvFinderContext())
-            {
                 var userID = db.Users.Where(x => x.Username == username).Select(x => x.Id).SingleOrDefault();
                 return userID;
-            }
         }
     }
 }
