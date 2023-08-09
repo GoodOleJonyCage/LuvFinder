@@ -1,9 +1,10 @@
-import {useState } from 'react'
+import { useState } from 'react'
+import { useNavigate } from "react-router-dom";
 import { PageHeader } from "./PageHeader"
 import { UserStore } from './UserStore'
 
 export const Header = () => {
-
+    const navigate = useNavigate();
     const { getUsername, clearToken } = UserStore();
     const username = getUsername();
     //console.log(getUsername());
@@ -56,7 +57,7 @@ export const Header = () => {
                         <div className="menu-area">
                             <ul className="menu">
                                 <li>
-                                    <a href="/">Home</a>
+                                    <a onClick={(e) => { navigate('/home'); }}>Home</a>
                                 </li>
 
                                 <li>
@@ -83,20 +84,23 @@ export const Header = () => {
                                 </li>
                                 <li><a href="contact.html">Contact</a></li>
                             </ul>
-                            {
-                                username !== null ?
-                                <div className="login-signout-container">
-                                        <a href="/#" className="username"><i className="icofont-user"></i> <span>{username}</span> </a>
-                                        <a
-                                            onClick={(e) => { clearToken();window.location.href="/" }}
-                                            href="/#" className="logout"><span>Log Out</span> </a>
-                                    </div>
-                                    :
-                                    <div>
-                                        <a href="/login" className="login"><i className="icofont-user"></i> <span>LOG IN</span> </a>
-                                        <a href="/register" className="signup"><i className="icofont-users"></i> <span>SIGN UP</span> </a>
-                                    </div>
-                            }
+                            <div className="login-signout-container">
+                                <button
+                                    onClick={(e) => { if (username === null) navigate('login');  }}
+                                    className="username">
+                                    <i className="icofont-user"></i> <span>{username === null ? "LOG IN" : username}</span> </button>
+                                <button
+                                    onClick={(e) => {
+                                        if (username === null) {
+                                            navigate('/register');
+                                        }
+                                        else {
+                                            clearToken();
+                                            navigate('/home');
+                                        }
+                                    }}
+                                    className="logout"><i className="icofont-users"></i> <span>{username === null ? "SIGN UP" : "LOG OUT"}</span> </button>
+                            </div>
                             {/* toggle icons */}
                             <div className="header-bar d-lg-none">
                                     <span></span>

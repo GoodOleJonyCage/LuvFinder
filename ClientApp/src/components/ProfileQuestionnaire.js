@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
 import { LoadProfile, SaveProfile } from '../Services/Services'
-
+import { useNavigate } from "react-router-dom";
 
 export const ProfileQuestionnaire = () => {
 
@@ -12,6 +12,8 @@ export const ProfileQuestionnaire = () => {
     const [errors, seterrors] = useState([]);
     const [error, seterror] = useState('');
 
+    const navigate = useNavigate();
+
     const submitProfile = async () => {
 
         seterrors([]);
@@ -21,7 +23,7 @@ export const ProfileQuestionnaire = () => {
 
             const profileSaved = await SaveProfile(username, questions);
             if (profileSaved)
-                window.location.href = '/';
+                navigate('/home');
 
         } catch (e) {
 
@@ -40,7 +42,7 @@ export const ProfileQuestionnaire = () => {
 
         try {
             const vm = await LoadProfile();
-            console.log(vm);
+            //console.log(vm);
             setquestions(vm);
         } catch (e) {
 

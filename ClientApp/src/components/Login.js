@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LoginUser } from '../Services/Services'
 import { UserStore } from './UserStore'
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
 
@@ -10,7 +11,9 @@ export const Login = () => {
     const [submitted, setsubmitted] = useState(false);
     const [btnPressed, setbtnPressed] = useState(false);
     const { saveToken, saveUsername } = UserStore();
-    
+
+    const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
 
         setresult('');
@@ -26,7 +29,7 @@ export const Login = () => {
                 if (token) {
                     saveToken(token);
                     saveUsername(username);
-                    window.location.href = '/';//?username=' + username;
+                    navigate('/home');//?username=' + username;
                 }
 
             } catch (response) {

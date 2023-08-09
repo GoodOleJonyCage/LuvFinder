@@ -78,12 +78,25 @@ body a {
 
 .profilequestionnaire-container .lab-btn {
     line-height: 30px;
-    
+}
+
+
+a:hover {
+    cursor: pointer;
+}
+
+/*Header links login, sign up*/ 
+
+@media (min-width: 992px) {
+    .header-wrapper .menu-area {
+        align-items: baseline;
+    }
 }
 
 @media (min-width: 768px) {
     .header-wrapper .menu-area .username {
-        padding: 10px;
+        border: none;
+        padding: 8px;
         display: inline-block;
         color: #df314d;
         border-radius: 2px 0 0 2px;
@@ -92,21 +105,27 @@ body a {
 }
 
 @media (min-width: 768px) {
-    .header-wrapper .menu-area .logout {
-        padding: 10px;
+    .header-wrapper .menu-area .logout
+     {
+        border:none;
+        padding: 8px;
         display: inline-block;
         color: #fff;
         border-radius: 2px 0 0 2px;
         background: #df314d;
     }
+    
 }
 
 @media (max-width: 768px) {
     .header-wrapper .menu-area .login-signout-container {
         display: flex;
         flex-direction: column;
+        align-items:flex-start;
     }
-    .header-wrapper .menu-area .login-signout-container a {
+    .header-wrapper .menu-area .login-signout-container button {
             color: white;
+            background-color: transparent;
+            border: none;
     }
 }

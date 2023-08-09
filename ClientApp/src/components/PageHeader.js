@@ -1,14 +1,16 @@
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const GetBreadCrumbPath = () => {
 
-    let path = "/";
+    let path = "";
     const location = useLocation();
     switch (location.pathname) {
 
-        case "/":
-            path = "/login";
+        case "/home":
+            path = "";
             break;
+
         case "/login":
             path = "/login";
             break;
@@ -26,21 +28,22 @@ const GetBreadCrumbPath = () => {
             break;
 
         default:
-            path = "/";
+            path = "";
             break;
     }
-    return  path;
+    return path;
 }
 
 const GetHeaderTitle = () => {
 
-    let path = "/";
+    let path = "";
     const location = useLocation();
     switch (location.pathname) {
 
-        case "/":
-            path = "Home";
+        case "/home":
+            path = "";
             break;
+
         case "/login":
             path = "Login";
             break;
@@ -58,7 +61,7 @@ const GetHeaderTitle = () => {
             break;
 
         default:
-            path = "/";
+            path = "";
             break;
     }
     return path;
@@ -66,13 +69,14 @@ const GetHeaderTitle = () => {
 
 const GetBreadCrumbTitle = () => {
 
-    let path = "/";
+    let path = "";
     const location = useLocation();
     switch (location.pathname) {
 
-        case "/":
-            path = "Login";
+        case "/home":
+            path = "";
             break;
+
         case "/login":
             path = "Login";
             break;
@@ -90,15 +94,16 @@ const GetBreadCrumbTitle = () => {
             break;
 
         default:
-            path = "/";
+            path = "";
             break;
     }
     return path;
 }
 
 
-
 export const PageHeader = () => {
+
+    const navigate = useNavigate();
 
     return <section className="page-header-section style-1" >
         <div className="container">
@@ -108,10 +113,10 @@ export const PageHeader = () => {
                         <h2>TuruLav {GetHeaderTitle()} Page</h2>
                     </div>
                     <ol className="breadcrumb">
-                        <li><a href="/">Home</a></li>
-                        <li>></li>
+                        <li><a onClick={(e) => { navigate('/home'); }}>Home</a></li>
+                        <li>{GetBreadCrumbTitle().length > 0 ? ">" : ""}</li>
                         <li className="active">
-                            <a href={GetBreadCrumbPath()}>{GetBreadCrumbTitle()}</a></li>
+                            <a onClick={(e) => { navigate(GetBreadCrumbPath()); }}>{GetBreadCrumbTitle()}</a></li>
                     </ol>
                 </div>
             </div>

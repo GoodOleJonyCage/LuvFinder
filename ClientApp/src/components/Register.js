@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { RegisterUser } from '../Services/Services'
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
 
@@ -8,6 +9,8 @@ export const Register = () => {
     const [result, setresult] = useState('');
     const [submitted, setsubmitted] = useState(false);
     const [btnPressed, setbtnPressed] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
 
@@ -21,7 +24,7 @@ export const Register = () => {
 
                 const isregistered = await RegisterUser(username, password);
                 if (isregistered)
-                    window.location.href = '/createprofile?username=' + username;
+                    navigate('/createprofile?username=' + username);
 
             } catch (response) {
                 response.json().then(error => {

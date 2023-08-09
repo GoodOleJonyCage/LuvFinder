@@ -62,7 +62,6 @@ export const RegisterUser = async (username, password) => {
 
     if (response.ok) {
         const data = await response.json();
-        console.log(data);
         return data;
     }
 

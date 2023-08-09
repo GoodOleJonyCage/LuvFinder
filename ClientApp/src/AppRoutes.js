@@ -12,6 +12,10 @@ const AppRoutes = [
         element: <HomePage />
     },
     {
+        path: '/home',
+        element: <HomePage />
+    },
+    {
         path: '/counter',
         element: <Counter />
     },
