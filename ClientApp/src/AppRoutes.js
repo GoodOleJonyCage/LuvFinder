@@ -5,7 +5,7 @@ import { LoginPage } from "./Pages/LoginPage";
 import { RegisterPage } from "./Pages/RegisterPage"
 import { ProfilePage } from "./Pages/ProfilePage"
 import { CreateProfilePage } from "./Pages/CreateProfilePage"
-
+import { LogoutPage } from "./Pages/LogoutPage"
 const AppRoutes = [
     {
         index: true,
@@ -34,7 +34,12 @@ const AppRoutes = [
     {
         path: '/createprofile',
         element: <CreateProfilePage />
-    }
+    },
+    {
+        path: '/logout',
+        element: <LogoutPage />
+    },
+    
 ];
 
 export default AppRoutes;

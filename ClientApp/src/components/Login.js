@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { LoginUser } from '../Services/Services'
+import { UserStore } from './UserStore'
 
 export const Login = () => {
 
@@ -7,27 +8,37 @@ export const Login = () => {
     const [password, setpassword] = useState('');
     const [result, setresult] = useState('');
     const [submitted, setsubmitted] = useState(false);
-
+    const [btnPressed, setbtnPressed] = useState(false);
+    const { saveToken, saveUsername } = UserStore();
+    
     const handleSubmit = async (e) => {
 
         setresult('');
         setsubmitted(true);
+        setbtnPressed(true);
 
         if (username.length > 0 && password.length > 0) {
 
             try {
 
-                const userExists = await LoginUser(username, password);
-                console.log(userExists);
-                if (userExists)
+                const token = await LoginUser(username, password);
+                //console.log(token);
+                if (token) {
+                    saveToken(token);
+                    saveUsername(username);
                     window.location.href = '/';//?username=' + username;
+                }
 
             } catch (response) {
                 response.json().then(error => {
                     //console.log(error);
                     setresult(error);
+                    setbtnPressed(false);
                 })
             }
+        }
+        else {
+            setbtnPressed(false);
         }
     }
 
@@ -61,8 +72,11 @@ export const Login = () => {
                                 {result}
                             </div>
                             <div className="form-group">
-                            <button onClick={handleSubmit}   type="Submit"
-                                className="d-block lab-btn">Submit Now</button>
+                            {   
+                               !btnPressed &&
+                                    <button onClick={handleSubmit} type="Submit"
+                                        className="d-block lab-btn">Submit Now</button>
+                            }
                             </div>
                         </div>
                         <div className="account-bottom">

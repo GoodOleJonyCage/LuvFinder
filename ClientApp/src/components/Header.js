@@ -1,7 +1,12 @@
+import {useState } from 'react'
 import { PageHeader } from "./PageHeader"
+import { UserStore } from './UserStore'
 
 export const Header = () => {
 
+    const { getUsername, clearToken } = UserStore();
+    const username = getUsername();
+    //console.log(getUsername());
     return <>
             <header className="header-section">
             <div className="header-top">
@@ -78,18 +83,29 @@ export const Header = () => {
                                 </li>
                                 <li><a href="contact.html">Contact</a></li>
                             </ul>
-                            <a href="login" className="login"><i className="icofont-user"></i> <span>LOG IN</span> </a>
-                            <a href="signup" className="signup"><i className="icofont-users"></i> <span>SIGN UP</span> </a>
-
+                            {
+                                username !== null ?
+                                <div className="login-signout-container">
+                                        <a href="/#" className="username"><i className="icofont-user"></i> <span>{username}</span> </a>
+                                        <a
+                                            onClick={(e) => { clearToken();window.location.href="/" }}
+                                            href="/#" className="logout"><span>Log Out</span> </a>
+                                    </div>
+                                    :
+                                    <div>
+                                        <a href="/login" className="login"><i className="icofont-user"></i> <span>LOG IN</span> </a>
+                                        <a href="/register" className="signup"><i className="icofont-users"></i> <span>SIGN UP</span> </a>
+                                    </div>
+                            }
                             {/* toggle icons */}
                             <div className="header-bar d-lg-none">
-                                <span></span>
-                                <span></span>
-                                <span></span>
-                            </div>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
                             <div className="ellepsis-bar d-lg-none">
-                                <i className="icofont-info-square"></i>
-                            </div>
+                                    <i className="icofont-info-square"></i>
+                                    </div>
                         </div>
                     </div>
                 </div>

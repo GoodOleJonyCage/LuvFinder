@@ -1,7 +1,11 @@
 ﻿using LuvFinder.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Mail;
+using System.Security.Claims;
+using System.Text;
 
 namespace LuvFinder.Controllers
 {
@@ -10,11 +14,35 @@ namespace LuvFinder.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
+        const string roleAdmin = "Admin";
+        const string roleUser = "User";
 
         private readonly LuvFinderContext db ;
-        public UserController(LuvFinderContext _db)
+        private readonly IConfiguration _config;
+        public UserController(LuvFinderContext _db, IConfiguration config)
         {
             db = _db;
+            _config = config;
+        }
+
+        private string GenerateToken(Models.User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.Username),
+                new Claim(ClaimTypes.Role,(user.IsAdmin.HasValue ? user.IsAdmin.Value:false) ? roleAdmin : roleUser)
+            };
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(double.Parse(_config["Timeout"])),
+                signingCredentials: credentials);
+
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+
         }
 
 
@@ -39,10 +67,11 @@ namespace LuvFinder.Controllers
                 return BadRequest("Password required");
             }
 
-            var userExists = db.Users.Any(u => u.Username == user.UserName && u.Password == user.Password);
+            var userExists = db.Users.Where(u => u.Username == user.UserName && u.Password == user.Password)
+                            .SingleOrDefault();
 
-            if (userExists)
-                return Ok(true);
+            if (userExists != null)
+                return Ok(GenerateToken(userExists));
             else
                 return BadRequest("Invalid username/password");
                 

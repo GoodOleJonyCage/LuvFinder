@@ -7,11 +7,13 @@ export const Register = () => {
     const [password, setpassword] = useState('');
     const [result, setresult] = useState('');
     const [submitted, setsubmitted] = useState(false);
+    const [btnPressed, setbtnPressed] = useState(false);
 
     const handleSubmit = async (e) => {
 
         setresult('');
         setsubmitted(true);
+        setbtnPressed(true);
 
         if (username.length > 0 && password.length > 0) {
 
@@ -25,8 +27,12 @@ export const Register = () => {
                 response.json().then(error => {
                     //console.log(error);
                     setresult(error);
+                    setbtnPressed(false);
                 })
             }
+        }
+        else {
+            setbtnPressed(false);
         }
     }
 
@@ -57,8 +63,10 @@ export const Register = () => {
                         {result}
                     </div>
                     <div className="form-group">
-                        <button className="d-block lab-btn" type="Submit"
-                            onClick={handleSubmit}>Get Started Now</button>
+                        {!btnPressed &&
+                            <button className="d-block lab-btn" type="Submit"
+                                onClick={handleSubmit}>Get Started Now</button>
+                        }
                     </div>
                 </div>
                 <div className="account-bottom">

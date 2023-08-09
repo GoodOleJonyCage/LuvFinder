@@ -20,10 +20,13 @@ namespace LuvFinder.Controllers
         //}
 
         private readonly LuvFinderContext db;
-        public ProfileController(LuvFinderContext _db) {
-
+        private readonly IConfiguration _config;
+        public ProfileController(LuvFinderContext _db, IConfiguration config)
+        {
             db = _db;
-        }  
+            _config = config;
+        }
+
 
         [HttpGet]
         [Route("profilequestionnaire")]
@@ -64,7 +67,7 @@ namespace LuvFinder.Controllers
         {
             var username = param.GetProperty("username").ToString();
             var vm = JsonConvert.DeserializeObject<List<ViewModels.ProfileQuestion>>(param.GetProperty("vm").ToString());
-            var userID = (new UserController(new LuvFinderContext())).UserIDByName(username);
+            var userID = (new UserController(new LuvFinderContext(), _config)).UserIDByName(username);
 
             List<string> lstErrors = new List<string>();
             

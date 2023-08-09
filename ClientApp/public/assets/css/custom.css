@@ -1,4 +1,4 @@
-﻿body * {
+﻿body div {
     color: white;
 }
 
@@ -79,4 +79,34 @@ body a {
 .profilequestionnaire-container .lab-btn {
     line-height: 30px;
     
+}
+
+@media (min-width: 768px) {
+    .header-wrapper .menu-area .username {
+        padding: 10px;
+        display: inline-block;
+        color: #df314d;
+        border-radius: 2px 0 0 2px;
+        background-color: #fff;
+    }
+}
+
+@media (min-width: 768px) {
+    .header-wrapper .menu-area .logout {
+        padding: 10px;
+        display: inline-block;
+        color: #fff;
+        border-radius: 2px 0 0 2px;
+        background: #df314d;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-wrapper .menu-area .login-signout-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .header-wrapper .menu-area .login-signout-container a {
+            color: white;
+    }
 }
