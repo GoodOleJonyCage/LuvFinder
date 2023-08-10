@@ -54,9 +54,10 @@ body a {
 }
 
 .profilequestionnaire-textarea{
-    width:75%;
+    width:100%;
     color:black;
     padding:20px;
+    margin-top:10px;
 }
 
 .questionnaire_Control_container {

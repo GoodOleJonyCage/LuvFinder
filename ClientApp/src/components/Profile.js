@@ -1,5 +1,77 @@
+import { useEffect, useState } from 'react'
+import { LoadingDiv } from './LoadingDiv'
+import { LoadUserProfile, SaveProfile } from '../Services/Services'
+import { UserStore } from './UserStore'
+import { useNavigate } from "react-router-dom"
 
 export const Profile = () => {
+
+    const [questions, setquestions] = useState([]);
+    const [errors, seterrors] = useState([]);
+    const [error, seterror] = useState('');
+    const [btnPressed, setbtnPressed] = useState(false);
+    const navigate = useNavigate();
+    const { getUsername } = UserStore();
+
+
+    const Update_On_Checkbox = (qindex,aindex, val) => {
+
+        let updatedquestions = [...questions];
+        updatedquestions[qindex].question.answers[aindex].selected = val;
+        setquestions(updatedquestions);
+    }
+
+    const Update_On_Radio = (qindex, aindex, val) => {
+
+        let updatedquestions = [...questions];
+        for (var i = 0; i < updatedquestions[qindex].question.answers.length; i++) {
+              updatedquestions[qindex].question.answers[i].selected = false;
+        }
+        updatedquestions[qindex].question.answers[aindex].selected = val;
+        setquestions(updatedquestions);
+    }
+
+    const submitProfile = async () => {
+
+        seterrors([]);
+        seterror('');
+        setbtnPressed(true);
+
+        try {
+
+            const profileSaved = await SaveProfile(getUsername(), questions);
+            if (profileSaved)
+                navigate('/home');
+
+        } catch (e) {
+
+            e.json().then(error => {
+
+                if (error instanceof Array)
+                    seterrors(error);
+                else
+                    seterror(error);
+
+                setbtnPressed(false);
+
+            })
+        }
+    }
+
+    const LoadData = async () => {
+
+        try {
+            let vm = await LoadUserProfile(getUsername());
+            //console.log(vm);
+            setquestions(vm);
+        } catch (e) {
+
+        }
+    }
+    useEffect(() => {
+        LoadData();
+    }, []);
+
     return <section className="profile-section padding-tb">
         <div className="container">
             <div className="section-wrapper">
@@ -1508,6 +1580,59 @@ export const Profile = () => {
                                     <div className="row">
                                         <div className="col-xl-8">
                                             <article>
+                                                {
+                                                    questions.length === 0 ? <LoadingDiv /> :
+                                                        questions.map((q, index) => {
+                                                            return <div className="info-card mb-20" key={index}>
+                                                                        <div className="info-card-title">
+                                                                            <h6>{q.question.shortDesc}</h6>
+                                                                        </div>
+                                                                        <div className="info-card-content">
+                                                                            {
+                                                                                q.question.answers.length === 0 ?
+                                                                                    <>
+                                                                                        <div>{q.question.text}</div>
+                                                                                        <textarea id={"textarea" + index }
+                                                                                            onChange={(e) => { q.answerText = e.target.value }}
+                                                                                    className="profilequestionnaire-textarea" defaultValue={q.answerText} rows="5" cols="5"></textarea> 
+                                                                                    </> :
+                                                                                    <ul className="info-list">
+                                                                                        <li>
+                                                                                            <p className="info-name">{q.question.text}</p>
+                                                                                            <div className="info-details">
+                                                                                                {
+                                                                                                    q.question.answers.map((a, aindex) => {
+                                                                                                        return <div key={aindex} className="questionnaire_Control_container">
+                                                                                                            {
+                                                                                                                q.question.questionType === 1 ?
+                                                                                                                    <label>
+                                                                                                                        <input
+                                                                                                                            checked={a.selected}
+                                                                                                                            onChange={(e) => { Update_On_Checkbox(index, aindex, e.target.checked) }}
+                                                                                                                            type="checkbox"  />{a.text}
+                                                                                                                    </label> :
+                                                                                                                    q.question.questionType === 2 ?
+                                                                                                                        <label>
+                                                                                                                            <input
+                                                                                                                                checked={a.selected}
+                                                                                                                                onChange={(e) => { Update_On_Radio(index, aindex, e.target.checked) }}
+                                                                                                                                name={q.question.text}
+                                                                                                                                type="radio"
+                                                                                                                                value={a.text} />{a.text} 
+                                                                                                                        </label>
+                                                                                                                        : <></>
+                                                                                                            }
+                                                                                                        </div>
+                                                                                                    })
+                                                                                                }
+                                                                                            </div>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                            })
+                                                }
                                                 <div className="info-card mb-20">
                                                     <div className="info-card-title">
                                                         <h6>Base Info</h6>
@@ -1646,6 +1771,28 @@ export const Profile = () => {
                                                     </div>
                                                 </div>
                                             </article>
+                                            <div className="container">
+                                                <div className="m-auto">
+                                                    <div className=" text-center  ">
+                                                        <ul>
+                                                            {
+                                                                errors.length > 0 ?
+                                                                    errors.map((error, i) => {
+
+                                                                        return <li key={i} className="highlight-error">{error}</li>
+                                                                    }) : <></>
+                                                            }
+                                                            <li className="highlight-error">{error}</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div className="col-sm-3 m-auto banner-form">
+                                                        {!btnPressed &&
+                                                            <button onClick={(e) => submitProfile()}
+                                                                className="smaller lab-btn" type="Submit" >Save Profile</button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         {/* Aside Part */}

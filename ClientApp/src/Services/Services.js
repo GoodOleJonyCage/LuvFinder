@@ -21,6 +21,27 @@ export const LoadProfile = async (userID) => {
 
 }
 
+export const LoadUserProfile = async (username) => {
+
+    let response = await fetch(`profile/userprofile`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({ username: username }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+
+}
+
 export const SaveProfile = async (username, vm) => {
 
     let response = await fetch(`profile/profilesaved`, {

@@ -32,7 +32,7 @@ const AppRoutes = [
         element: <RegisterPage />
     },
     {
-        path: '/profile',
+        path: '/editprofile',
         element: <ProfilePage />
     },
     {

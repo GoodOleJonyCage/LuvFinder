@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export const ProfileQuestionnaire = () => {
 
-    const params = new URLSearchParams(window.location.search); 
+    const params = new URLSearchParams(window.location.search);
     let username = params.get('username');
 
     const [questions, setquestions] = useState([]);
@@ -31,9 +31,9 @@ export const ProfileQuestionnaire = () => {
 
                 if (error instanceof Array)
                     seterrors(error);
-                 else
+                else
                     seterror(error);
-                
+
             })
         }
     }
@@ -55,7 +55,7 @@ export const ProfileQuestionnaire = () => {
 
     return <div className="profilequestionnaire-container ">
         <div className="col-sm-10 m-auto ">
-            <article className="">
+            <article>
                 {
                     questions.length === 0 ? <LoadingDiv /> :
                         questions.map((q, index) => {
@@ -64,38 +64,43 @@ export const ProfileQuestionnaire = () => {
                                     <h6>{q.question.shortDesc}</h6>
                                 </div>
                                 <div className="info-card-content">
-                                    <ul className="info-list">
-                                        <li>
-                                            <p className="info-name">{q.question.text}</p>
-                                            <div className="info-details">
-                                                {
-                                                    q.question.answers.length === 0 ?
-                                                        <textarea
-                                                            onChange={(e) => { q.answerText = e.target.value }}
-                                                            className="profilequestionnaire-textarea" defaultValue="" rows="5" cols="5"></textarea> :
-                                                        q.question.answers.map((a, aindex) => {
-                                                            return <div key={aindex} className="questionnaire_Control_container">
-                                                                {
-                                                                    q.question.questionType === 1 ?
-                                                                        <label>
-                                                                            <input
-                                                                                onChange={(e) => { a.selected = e.target.checked }}
-                                                                                type="checkbox" value={a.text} />{a.text}
-                                                                        </label> :
-                                                                        q.question.questionType === 2 ?
+                                    {
+                                        q.question.answers.length === 0 ?
+                                            <>
+                                                <div>{q.question.text}</div>
+                                                <textarea
+                                                    onChange={(e) => { q.answerText = e.target.value }}
+                                                    className="profilequestionnaire-textarea" defaultValue="" rows="5" cols="5"></textarea>
+                                            </> :
+                                            <ul className="info-list">
+                                                <li>
+                                                    <p className="info-name">{q.question.text}</p>
+                                                    <div className="info-details">
+                                                        {
+                                                            q.question.answers.map((a, aindex) => {
+                                                                return <div key={aindex} className="questionnaire_Control_container">
+                                                                    {
+                                                                        q.question.questionType === 1 ?
                                                                             <label>
                                                                                 <input
                                                                                     onChange={(e) => { a.selected = e.target.checked }}
-                                                                                    name={q.question.text} type="radio" value={a.text} />{a.text}
-                                                                            </label>
-                                                                            : <></>
-                                                                }
-                                                            </div>
-                                                        })
-                                                }
-                                            </div>
-                                        </li>
-                                    </ul>
+                                                                                    type="checkbox" value={a.text} />{a.text}
+                                                                            </label> :
+                                                                            q.question.questionType === 2 ?
+                                                                                <label>
+                                                                                    <input
+                                                                                        onChange={(e) => { a.selected = e.target.checked }}
+                                                                                        name={q.question.text} type="radio" value={a.text} />{a.text}
+                                                                                </label>
+                                                                                : <></>
+                                                                    }
+                                                                </div>
+                                                            })
+                                                        }
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                    }
                                 </div>
                             </div>
                         })
@@ -108,10 +113,10 @@ export const ProfileQuestionnaire = () => {
                     <ul>
                         {
                             errors.length > 0 ?
-                            errors.map((error, i) => {
+                                errors.map((error, i) => {
 
-                                return <li key={i} className="highlight-error">{error}</li>
-                            }) : <></>
+                                    return <li key={i} className="highlight-error">{error}</li>
+                                }) : <></>
                         }
                         <li className="highlight-error">{error}</li>
                     </ul>

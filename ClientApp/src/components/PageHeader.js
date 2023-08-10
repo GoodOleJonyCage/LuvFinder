@@ -19,8 +19,8 @@ const GetBreadCrumbPath = () => {
             path = "/register";
             break;
 
-        case "/profile":
-            path = "/profile";
+        case "/editprofile":
+            path = "/editprofile";
             break;
 
         case "/createprofile":
@@ -52,8 +52,8 @@ const GetHeaderTitle = () => {
             path = "Register";
             break;
 
-        case "/profile":
-            path = "Profile";
+        case "/editprofile":
+            path = "Edit Profile";
             break;
 
         case "/createprofile":
@@ -85,8 +85,8 @@ const GetBreadCrumbTitle = () => {
             path = "Register";
             break;
 
-        case "/profile":
-            path = "Profile";
+        case "/editprofile":
+            path = "Edit Profile";
             break;
 
         case "/createprofile":

@@ -27,40 +27,95 @@ namespace LuvFinder.Controllers
             _config = config;
         }
 
+        private List<ProfileQuestion> GetProfileQuestions()
+        {
+            List<ViewModels.ProfileQuestion> lst = new List<ViewModels.ProfileQuestion>();
+
+            lst = db.Profiles.Select(profilequestion =>
+            new ViewModels.ProfileQuestion()
+            {
+                ID = profilequestion.Id,
+                Question = new ViewModels.Question()
+                {
+                    QuestionID = profilequestion.QuestionId,
+                    Text = profilequestion.Question.Text,
+                    ShortDesc = profilequestion.Question.ShortDesc,
+                    QuestionTypeID = profilequestion.Question.QuestionType,
+                    QuestionType = (ViewModels.QuestionType)profilequestion.Question.QuestionType,
+                    Answers = profilequestion.Question.Answers
+                        .Select(answer => new ViewModels.Answer()
+                        {
+                            ID = answer.Id,
+                            Text = answer.Text,
+                        })
+                        .ToList()
+                }
+
+            }).ToList();
+            return lst;
+        }
+
+        private List<UserProfileQuestion> GetUserProfileQuestions(int userID)
+        {
+            var lst = new List<ViewModels.UserProfileQuestion>();
+
+            lst = db.UserProfiles
+                .Where(userProfile => userProfile.UserId == userID)
+                .Select(profilequestion =>
+                new ViewModels.UserProfileQuestion()
+                {
+                    ID = profilequestion.Id,
+                    UserID = profilequestion.UserId,
+                    QuestionID = profilequestion.QuestionId,
+                    AnswerID = profilequestion.AnswerId ?? 0,
+                    AnswerText = profilequestion.AnswerText ?? string.Empty,
+                    Date = profilequestion.Date,
+                    Selected = profilequestion.Selected ?? false
+                })
+                .ToList();
+
+            return lst;
+        }
 
         [HttpGet]
         [Route("profilequestionnaire")]
         public ActionResult ProfileQuestionnaire()
         {
-            List <ViewModels.ProfileQuestion> lst = new List<ViewModels.ProfileQuestion>();
-            using (LuvFinderContext db = new LuvFinderContext())
-            {
-                lst = db.Profiles.Select(profilequestion =>
-                 
-                new ViewModels.ProfileQuestion()
-                {
-                     ID = profilequestion.Id,
-                     Question = new ViewModels.Question()
-                     {
-                         QuestionID = profilequestion.QuestionId,
-                         Text = profilequestion.Question.Text,
-                         ShortDesc = profilequestion.Question.ShortDesc,
-                         QuestionTypeID = profilequestion.Question.QuestionType,
-                         QuestionType = (ViewModels.QuestionType)profilequestion.Question.QuestionType,
-                         Answers = profilequestion.Question.Answers
-                            .Select(answer => new ViewModels.Answer()
-                            {
-                                ID = answer.Id,
-                                Text = answer.Text,
-                            })
-                            .ToList()
-                     }
-
-                }).ToList();
-            }
+            List<ProfileQuestion> lst = GetProfileQuestions();
             return Ok(lst);
         }
-        
+
+        [HttpPost]
+        [Route("userprofile")]
+        public ActionResult UserProfile([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var username = userParams.GetProperty("username").ToString();
+            var userID = (new UserController(new LuvFinderContext(), _config)).UserIDByName(username);
+
+            List<ProfileQuestion> lstProfileQuestions = GetProfileQuestions();
+            List<UserProfileQuestion> lstUserProfile = GetUserProfileQuestions(userID);
+
+            lstProfileQuestions.ForEach(question =>
+            {
+                question.AnswerText = lstUserProfile?
+                                            .AsQueryable()?
+                                            .Where(entry => entry.QuestionID == question.ID &&
+                                                             entry.AnswerID  == 0)
+                                            .SingleOrDefault()?
+                                            .AnswerText ?? string.Empty;
+
+                question?.Question.Answers.ForEach(answer =>
+                {
+                    answer.Selected = lstUserProfile?
+                                            .AsQueryable()?
+                                            .Where(entry => entry.QuestionID == question.ID &&
+                                                             entry.AnswerID == answer.ID)
+                                            .SingleOrDefault()?.Selected ?? false;
+                });
+            });
+            return Ok(lstProfileQuestions);
+        }
+
         [HttpPost]
         [Route("profilesaved")]
         public ActionResult SaveProfile([FromBody] System.Text.Json.JsonElement param)
