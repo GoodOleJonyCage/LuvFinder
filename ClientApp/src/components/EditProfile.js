@@ -1,19 +1,68 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
-import { LoadUserProfile } from '../Services/Services'
-import { useLocation } from 'react-router-dom';
+import { LoadUserProfile, SaveProfile } from '../Services/Services'
+import { UserStore } from './UserStore'
+import { useNavigate } from "react-router-dom"
 
-export const Profile = () => {
+export const EditProfile = () => {
 
     const [questions, setquestions] = useState([]);
-    const location = useLocation();
-    let { username } = location.state;
-    
+    const [errors, seterrors] = useState([]);
+    const [error, seterror] = useState('');
+    const [btnPressed, setbtnPressed] = useState(false);
+    const navigate = useNavigate();
+    const { getUsername } = UserStore();
+
+
+    const Update_On_Checkbox = (qindex, aindex, val) => {
+
+        let updatedquestions = [...questions];
+        updatedquestions[qindex].question.answers[aindex].selected = val;
+        setquestions(updatedquestions);
+    }
+
+    const Update_On_Radio = (qindex, aindex, val) => {
+
+        let updatedquestions = [...questions];
+        for (var i = 0; i < updatedquestions[qindex].question.answers.length; i++) {
+            updatedquestions[qindex].question.answers[i].selected = false;
+        }
+        updatedquestions[qindex].question.answers[aindex].selected = val;
+        setquestions(updatedquestions);
+    }
+
+    const submitProfile = async () => {
+
+        seterrors([]);
+        seterror('');
+        setbtnPressed(true);
+
+        try {
+
+            const profileSaved = await SaveProfile(getUsername(), questions);
+            if (profileSaved)
+                navigate('/home');
+
+        } catch (e) {
+
+            e.json().then(error => {
+
+                if (error instanceof Array)
+                    seterrors(error);
+                else
+                    seterror(error);
+
+                setbtnPressed(false);
+
+            })
+        }
+    }
+
     const LoadData = async () => {
 
         try {
-            let vm = await LoadUserProfile(username);
-             //console.log(vm);
+            let vm = await LoadUserProfile(getUsername());
+            //console.log(vm);
             setquestions(vm);
         } catch (e) {
 
@@ -29,23 +78,23 @@ export const Profile = () => {
                 <div className="member-profile">
                     <div className="profile-item">
                         <div className="profile-cover">
-                            <img src="assets/images/profile/cover.jpg" alt="cover-pic"/>
-                                <div className="edit-photo custom-upload">
-                                    <div className="file-btn"><i className="icofont-camera"></i>
-                                        Edit Photo</div>
-                                    <input type="file"/>
-                                </div>
+                            <img src="assets/images/profile/cover.jpg" alt="cover-pic" />
+                            <div className="edit-photo custom-upload">
+                                <div className="file-btn"><i className="icofont-camera"></i>
+                                    Edit Photo</div>
+                                <input type="file" />
+                            </div>
                         </div>
                         <div className="profile-information">
                             <div className="profile-pic">
-                                <img src="assets/images/profile/Profile.jpg" alt="DP"/>
-                                    <div className="custom-upload">
-                                        <div className="file-btn">
-                                            <span className="d-none d-lg-inline-block"> <i className="icofont-camera"></i>
-                                                Edit</span>
-                                            <span className="d-lg-none mr-0"><i className="icofont-plus"></i></span></div>
-                                        <input type="file"/>
-                                    </div>
+                                <img src="assets/images/profile/Profile.jpg" alt="DP" />
+                                <div className="custom-upload">
+                                    <div className="file-btn">
+                                        <span className="d-none d-lg-inline-block"> <i className="icofont-camera"></i>
+                                            Edit</span>
+                                        <span className="d-lg-none mr-0"><i className="icofont-plus"></i></span></div>
+                                    <input type="file" />
+                                </div>
                             </div>
                             <div className="profile-name">
                                 <h4>William Smith</h4>
@@ -83,7 +132,7 @@ export const Profile = () => {
                     <div className="profile-item d-none">
                         <div className="lab-inner">
                             <div className="lab-thumb">
-                                <a href="/#"><img src="assets/images/profile/Profile.jpg" alt="profile"/></a>
+                                <a href="/#"><img src="assets/images/profile/Profile.jpg" alt="profile" /></a>
                             </div>
                             <div className="lab-content">
                                 <div className="profile-name">
@@ -228,7 +277,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -295,7 +344,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -362,7 +411,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -391,11 +440,11 @@ export const Profile = () => {
                                                                             <div className="row g-3">
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/02.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/03.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -448,7 +497,7 @@ export const Profile = () => {
                                                                         <div className="thumb-inner">
                                                                             <div className="thumb-img">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="thumb-content">
                                                                                 <h6><a href="#">
@@ -471,32 +520,32 @@ export const Profile = () => {
                                                                     <div className="lab-content">
                                                                         <form action="#" className="post-form">
                                                                             <input type="text"
-                                                                                placeholder="Whats on your mind. William?"/>
-                                                                                <div className="content-type">
-                                                                                    <ul className="content-list">
-                                                                                        <li className="text"><a href="#">
-                                                                                            <i className="icofont-edit"></i>
-                                                                                            Text
-                                                                                        </a></li>
-                                                                                        <li className="image-video">
-                                                                                            <div className="file-btn"><i
-                                                                                                className="icofont-camera"></i>
-                                                                                                Photo/Videos</div>
-                                                                                            <input type="file"/>
-                                                                                        </li>
-                                                                                        <li className="attach-file">
-                                                                                            <div className="file-btn"><i
-                                                                                                className="icofont-paper-clip"></i>
-                                                                                                Attach File</div>
-                                                                                            <input type="file"/>
-                                                                                        </li>
-                                                                                        <li className="post-submit">
-                                                                                            <input type="submit"
-                                                                                                value="Post"
-                                                                                                className="lab-btn"/>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </div>
+                                                                                placeholder="Whats on your mind. William?" />
+                                                                            <div className="content-type">
+                                                                                <ul className="content-list">
+                                                                                    <li className="text"><a href="#">
+                                                                                        <i className="icofont-edit"></i>
+                                                                                        Text
+                                                                                    </a></li>
+                                                                                    <li className="image-video">
+                                                                                        <div className="file-btn"><i
+                                                                                            className="icofont-camera"></i>
+                                                                                            Photo/Videos</div>
+                                                                                        <input type="file" />
+                                                                                    </li>
+                                                                                    <li className="attach-file">
+                                                                                        <div className="file-btn"><i
+                                                                                            className="icofont-paper-clip"></i>
+                                                                                            Attach File</div>
+                                                                                        <input type="file" />
+                                                                                    </li>
+                                                                                    <li className="post-submit">
+                                                                                        <input type="submit"
+                                                                                            value="Post"
+                                                                                            className="lab-btn" />
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -511,7 +560,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -578,7 +627,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -605,7 +654,7 @@ export const Profile = () => {
                                                                         </p>
                                                                         <div className="post-desc-img">
                                                                             <img src="assets/images/profile/post-image/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -649,7 +698,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -716,7 +765,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -745,11 +794,11 @@ export const Profile = () => {
                                                                             <div className="row g-3">
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/02.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/03.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -803,7 +852,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -830,7 +879,7 @@ export const Profile = () => {
                                                                         </p>
                                                                         <div className="post-desc-img">
                                                                             <img src="assets/images/profile/post-image/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -874,7 +923,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -903,11 +952,11 @@ export const Profile = () => {
                                                                             <div className="row g-3">
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/02.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/03.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -961,7 +1010,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -990,11 +1039,11 @@ export const Profile = () => {
                                                                             <div className="row g-3">
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/02.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                                 <div className="col-md-6">
                                                                                     <img src="assets/images/profile/post-image/03.jpg"
-                                                                                        alt="img"/>
+                                                                                        alt="img" />
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1040,7 +1089,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -1107,7 +1156,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -1181,7 +1230,7 @@ export const Profile = () => {
                                                                         <div className="post-author-inner">
                                                                             <div className="author-thumb">
                                                                                 <img src="assets/images/profile/dp.png"
-                                                                                    alt="img"/>
+                                                                                    alt="img" />
                                                                             </div>
                                                                             <div className="author-details">
                                                                                 <h6><a href="#">William Smith</a></h6>
@@ -1379,7 +1428,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1387,7 +1436,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1395,7 +1444,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1403,7 +1452,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1411,7 +1460,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1419,7 +1468,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1427,7 +1476,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1435,7 +1484,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1443,7 +1492,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1466,17 +1515,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">12+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -1495,17 +1544,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">16+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -1535,34 +1584,54 @@ export const Profile = () => {
                                                     questions.length === 0 ? <LoadingDiv /> :
                                                         questions.map((q, index) => {
                                                             return <div className="info-card mb-20" key={index}>
-                                                                        <div className="info-card-title">
-                                                                            <h6>{q.question.shortDesc}</h6>
-                                                                        </div>
-                                                                        <div className="info-card-content">
-                                                                            {
-                                                                                q.question.answers.length === 0 ?
-                                                                                    <>
-                                                                                        <div className="mb-3">{q.question.text}</div>
-                                                                                        <p className="question-para">{q.answerText}</p>
-                                                                                    </> :
-                                                                                    <ul className="info-list">
-                                                                                        <li>
-                                                                                            <p className="info-name">{q.question.text}</p>
-                                                                                            <div className="info-details">
-                                                                                                {
-                                                                                                q.question.answers.map((a, aindex) => {
-                                                                                                        return <ul key={aindex} className="questionnaire_Control_container">
-                                                                                                                <li className={a.selected ? "checkmark":"nocheckmark"}>{a.text}</li>
-                                                                                                               </ul>
-                                                                                                    })
-                                                                                                }
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                            }
-                                                                        </div>
-                                                                    </div>
-                                                            })
+                                                                <div className="info-card-title">
+                                                                    <h6>{q.question.shortDesc}</h6>
+                                                                </div>
+                                                                <div className="info-card-content">
+                                                                    {
+                                                                        q.question.answers.length === 0 ?
+                                                                            <>
+                                                                                <div>{q.question.text}</div>
+                                                                                <textarea id={"textarea" + index}
+                                                                                    onChange={(e) => { q.answerText = e.target.value }}
+                                                                                    className="profilequestionnaire-textarea" defaultValue={q.answerText} rows="5" cols="5"></textarea>
+                                                                            </> :
+                                                                            <ul className="info-list">
+                                                                                <li>
+                                                                                    <p className="info-name">{q.question.text}</p>
+                                                                                    <div className="info-details">
+                                                                                        {
+                                                                                            q.question.answers.map((a, aindex) => {
+                                                                                                return <div key={aindex} className="questionnaire_Control_container">
+                                                                                                    {
+                                                                                                        q.question.questionType === 1 ?
+                                                                                                            <label>
+                                                                                                                <input
+                                                                                                                    checked={a.selected}
+                                                                                                                    onChange={(e) => { Update_On_Checkbox(index, aindex, e.target.checked) }}
+                                                                                                                    type="checkbox" />{a.text}
+                                                                                                            </label> :
+                                                                                                            q.question.questionType === 2 ?
+                                                                                                                <label>
+                                                                                                                    <input
+                                                                                                                        checked={a.selected}
+                                                                                                                        onChange={(e) => { Update_On_Radio(index, aindex, e.target.checked) }}
+                                                                                                                        name={q.question.text}
+                                                                                                                        type="radio"
+                                                                                                                        value={a.text} />{a.text}
+                                                                                                                </label>
+                                                                                                                : <></>
+                                                                                                    }
+                                                                                                </div>
+                                                                                            })
+                                                                                        }
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        })
                                                 }
                                                 <div className="info-card mb-20">
                                                     <div className="info-card-title">
@@ -1702,6 +1771,28 @@ export const Profile = () => {
                                                     </div>
                                                 </div>
                                             </article>
+                                            <div className="container">
+                                                <div className="m-auto">
+                                                    <div className=" text-center  ">
+                                                        <ul>
+                                                            {
+                                                                errors.length > 0 ?
+                                                                    errors.map((error, i) => {
+
+                                                                        return <li key={i} className="highlight-error">{error}</li>
+                                                                    }) : <></>
+                                                            }
+                                                            <li className="highlight-error">{error}</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div className="col-sm-3 m-auto banner-form">
+                                                        {!btnPressed &&
+                                                            <button onClick={(e) => submitProfile()}
+                                                                className="smaller lab-btn" type="Submit" >Save Profile</button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         {/* Aside Part */}
@@ -1833,7 +1924,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1841,7 +1932,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1849,7 +1940,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1857,7 +1948,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1865,7 +1956,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1873,7 +1964,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1881,7 +1972,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1889,7 +1980,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1897,7 +1988,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -1920,17 +2011,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">12+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -1949,17 +2040,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">16+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -1989,7 +2080,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/01.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">jenifer Guido</a> </h6>
@@ -2003,7 +2094,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/02.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Andrea Guido</a> </h6>
@@ -2017,7 +2108,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/03.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Anna hawk</a> </h6>
@@ -2031,7 +2122,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/04.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Andreas Adam</a> </h6>
@@ -2045,7 +2136,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/05.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Alaina T</a> </h6>
@@ -2059,7 +2150,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/06.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Aron Smith</a> </h6>
@@ -2073,7 +2164,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/07.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Helen Gomz</a> </h6>
@@ -2087,7 +2178,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/08.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Andrez jr</a> </h6>
@@ -2101,7 +2192,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/09.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Ladiga Guido</a> </h6>
@@ -2115,7 +2206,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/10.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Andrea Guido</a> </h6>
@@ -2129,7 +2220,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/11.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Jene Aiko</a> </h6>
@@ -2143,7 +2234,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/12.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Jhon Cena</a> </h6>
@@ -2157,7 +2248,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/13.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Irfan Patel </a> </h6>
@@ -2171,7 +2262,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/14.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Hames Radregez</a> </h6>
@@ -2185,7 +2276,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/15.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Johan ben</a> </h6>
@@ -2199,7 +2290,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/16.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Johannes</a> </h6>
@@ -2213,7 +2304,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/17.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Helena Mind</a> </h6>
@@ -2227,7 +2318,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/18.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Virat Alba</a> </h6>
@@ -2241,7 +2332,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/19.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Afrin Nawr</a> </h6>
@@ -2255,7 +2346,7 @@ export const Profile = () => {
                                                             <div className="lab-inner">
                                                                 <div className="lab-thumb">
                                                                     <img src="assets/images/member/20.jpg"
-                                                                        alt="member-img"/>
+                                                                        alt="member-img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h6><a href="#">Jason Roy</a> </h6>
@@ -2397,7 +2488,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2405,7 +2496,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2413,7 +2504,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2421,7 +2512,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2429,7 +2520,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2437,7 +2528,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2445,7 +2536,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2453,7 +2544,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2461,7 +2552,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2484,17 +2575,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">12+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -2513,17 +2604,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">16+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -2554,7 +2645,7 @@ export const Profile = () => {
                                                                 className="lab-inner d-flex flex-wrap align-items-center p-4">
                                                                 <div className="lab-thumb me-md-4 mb-4 mb-md-0">
                                                                     <img src="assets/images/group/group-page/01.jpg"
-                                                                        alt="img"/>
+                                                                        alt="img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h4>Active Group A2</h4>
@@ -2562,17 +2653,17 @@ export const Profile = () => {
                                                                         apcations through visionary value </p>
                                                                     <ul className="img-stack d-flex">
                                                                         <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li className="bg-theme">12+</li>
                                                                     </ul>
                                                                     <div className="test"> <a href="profile.html"
@@ -2589,7 +2680,7 @@ export const Profile = () => {
                                                                 className="lab-inner d-flex flex-wrap align-items-center p-4">
                                                                 <div className="lab-thumb me-md-4 mb-4 mb-md-0">
                                                                     <img src="assets/images/group/group-page/02.jpg"
-                                                                        alt="img"/>
+                                                                        alt="img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h4>Active Group A2</h4>
@@ -2597,17 +2688,17 @@ export const Profile = () => {
                                                                         apcations through visionary value </p>
                                                                     <ul className="img-stack d-flex">
                                                                         <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li className="bg-theme">12+</li>
                                                                     </ul>
                                                                     <div className="test"> <a href="profile.html"
@@ -2624,7 +2715,7 @@ export const Profile = () => {
                                                                 className="lab-inner d-flex flex-wrap align-items-center p-4">
                                                                 <div className="lab-thumb me-md-4 mb-4 mb-md-0">
                                                                     <img src="assets/images/group/group-page/03.jpg"
-                                                                        alt="img"/>
+                                                                        alt="img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h4>Active Group A2</h4>
@@ -2632,17 +2723,17 @@ export const Profile = () => {
                                                                         apcations through visionary value </p>
                                                                     <ul className="img-stack d-flex">
                                                                         <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li className="bg-theme">12+</li>
                                                                     </ul>
                                                                     <div className="test"> <a href="profile.html"
@@ -2659,7 +2750,7 @@ export const Profile = () => {
                                                                 className="lab-inner d-flex flex-wrap align-items-center p-4">
                                                                 <div className="lab-thumb me-md-4 mb-4 mb-md-0">
                                                                     <img src="assets/images/group/group-page/04.jpg"
-                                                                        alt="img"/>
+                                                                        alt="img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h4>Active Group A2</h4>
@@ -2667,17 +2758,17 @@ export const Profile = () => {
                                                                         apcations through visionary value </p>
                                                                     <ul className="img-stack d-flex">
                                                                         <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li className="bg-theme">12+</li>
                                                                     </ul>
                                                                     <div className="test"> <a href="profile.html"
@@ -2694,7 +2785,7 @@ export const Profile = () => {
                                                                 className="lab-inner d-flex flex-wrap align-items-center p-4">
                                                                 <div className="lab-thumb me-md-4 mb-4 mb-md-0">
                                                                     <img src="assets/images/group/group-page/05.jpg"
-                                                                        alt="img"/>
+                                                                        alt="img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h4>Active Group A2</h4>
@@ -2702,17 +2793,17 @@ export const Profile = () => {
                                                                         apcations through visionary value </p>
                                                                     <ul className="img-stack d-flex">
                                                                         <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li className="bg-theme">12+</li>
                                                                     </ul>
                                                                     <div className="test"> <a href="profile.html"
@@ -2729,7 +2820,7 @@ export const Profile = () => {
                                                                 className="lab-inner d-flex flex-wrap align-items-center p-4">
                                                                 <div className="lab-thumb me-md-4 mb-4 mb-md-0">
                                                                     <img src="assets/images/group/group-page/02.jpg"
-                                                                        alt="img"/>
+                                                                        alt="img" />
                                                                 </div>
                                                                 <div className="lab-content">
                                                                     <h4>Active Group A2</h4>
@@ -2737,17 +2828,17 @@ export const Profile = () => {
                                                                         apcations through visionary value </p>
                                                                     <ul className="img-stack d-flex">
                                                                         <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img"/></li>
+                                                                            alt="member-img" /></li>
                                                                         <li className="bg-theme">12+</li>
                                                                     </ul>
                                                                     <div className="test"> <a href="profile.html"
@@ -2891,7 +2982,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2899,7 +2990,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2907,7 +2998,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2915,7 +3006,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2923,7 +3014,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2931,7 +3022,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2939,7 +3030,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2947,7 +3038,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2955,7 +3046,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -2978,17 +3069,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">12+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -3007,17 +3098,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">16+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -3044,121 +3135,121 @@ export const Profile = () => {
                                     className="row g-3 g-lg-4 justify-content-center row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6">
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/03.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/03.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/02.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/02.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/01.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/01.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/04.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/04.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/05.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/05.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/06.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/06.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/07.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/07.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/08.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/08.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/09.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/09.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/10.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/10.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/11.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/11.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/12.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/12.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/13.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/13.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/14.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/14.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/15.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/15.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/16.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/16.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/17.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/17.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/18.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/18.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/19.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/19.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
                                     <div className="col">
                                         <div className="gallery-img">
-                                            <img src="assets/images/member/20.jpg" alt="image" className="rounded"/>
+                                            <img src="assets/images/member/20.jpg" alt="image" className="rounded" />
 
                                         </div>
                                     </div>
@@ -3225,7 +3316,7 @@ export const Profile = () => {
                                                                             <div className="file-btn"><i
                                                                                 className="icofont-upload-alt"></i>
                                                                                 Upload</div>
-                                                                            <input type="file"/>
+                                                                            <input type="file" />
                                                                         </div>
                                                                     </li>
                                                                 </ul>
@@ -3234,85 +3325,85 @@ export const Profile = () => {
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/10.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/11.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/12.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -3336,7 +3427,7 @@ export const Profile = () => {
                                                                             <div className="file-btn"><i
                                                                                 className="icofont-upload-alt"></i>
                                                                                 Upload</div>
-                                                                            <input type="file"/>
+                                                                            <input type="file" />
                                                                         </div>
                                                                     </li>
                                                                 </ul>
@@ -3346,7 +3437,7 @@ export const Profile = () => {
                                                                             <div className="album-thumb">
                                                                                 <a href="#">
                                                                                     <img src="assets/images/member/02.jpg"
-                                                                                        alt="album"/>
+                                                                                        alt="album" />
                                                                                 </a>
                                                                             </div>
                                                                             <div className="album-content">
@@ -3360,7 +3451,7 @@ export const Profile = () => {
                                                                             <div className="album-thumb">
                                                                                 <a href="#">
                                                                                     <img src="assets/images/member/03.jpg"
-                                                                                        alt="album"/>
+                                                                                        alt="album" />
                                                                                 </a>
                                                                             </div>
                                                                             <div className="album-content">
@@ -3374,7 +3465,7 @@ export const Profile = () => {
                                                                             <div className="album-thumb">
                                                                                 <a href="#">
                                                                                     <img src="assets/images/member/06.jpg"
-                                                                                        alt="album"/>
+                                                                                        alt="album" />
                                                                                 </a>
                                                                             </div>
                                                                             <div className="album-content">
@@ -3388,7 +3479,7 @@ export const Profile = () => {
                                                                             <div className="album-thumb">
                                                                                 <a href="#">
                                                                                     <img src="assets/images/member/08.jpg"
-                                                                                        alt="album"/>
+                                                                                        alt="album" />
                                                                                 </a>
                                                                             </div>
                                                                             <div className="album-content">
@@ -3418,7 +3509,7 @@ export const Profile = () => {
                                                                             <div className="file-btn"><i
                                                                                 className="icofont-upload-alt"></i>
                                                                                 Upload</div>
-                                                                            <input type="file"/>
+                                                                            <input type="file" />
                                                                         </div>
                                                                     </li>
                                                                 </ul>
@@ -3427,85 +3518,85 @@ export const Profile = () => {
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/10.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/11.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/12.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                     <div className="col">
                                                                         <div className="media-thumb">
                                                                             <img src="assets/images/member/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -3528,7 +3619,7 @@ export const Profile = () => {
                                                                             <div className="file-btn"><i
                                                                                 className="icofont-upload-alt"></i>
                                                                                 Upload</div>
-                                                                            <input type="file"/>
+                                                                            <input type="file" />
                                                                         </div>
                                                                     </li>
                                                                 </ul>
@@ -3558,7 +3649,7 @@ export const Profile = () => {
                                                                             <div className="file-btn"><i
                                                                                 className="icofont-upload-alt"></i>
                                                                                 Upload</div>
-                                                                            <input type="file"/>
+                                                                            <input type="file" />
                                                                         </div>
                                                                     </li>
                                                                 </ul>
@@ -3709,7 +3800,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/01.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3717,7 +3808,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/02.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3725,7 +3816,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/03.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3733,7 +3824,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/04.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3741,7 +3832,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/05.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3749,7 +3840,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/06.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3757,7 +3848,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/07.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3765,7 +3856,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/08.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3773,7 +3864,7 @@ export const Profile = () => {
                                                                     <div className="image-thumb">
                                                                         <a href="#">
                                                                             <img src="assets/images/widget/09.jpg"
-                                                                                alt="img"/>
+                                                                                alt="img" />
                                                                         </a>
                                                                     </div>
                                                                 </div>
@@ -3796,17 +3887,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">12+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -3825,17 +3916,17 @@ export const Profile = () => {
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
                                                                             <li><img src="assets/images/group/group-mem/01.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/02.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/03.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/04.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/05.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li><img src="assets/images/group/group-mem/06.png"
-                                                                                alt="member-img"/></li>
+                                                                                alt="member-img" /></li>
                                                                             <li className="bg-theme">16+</li>
                                                                         </ul>
                                                                         <div className="test"> <a href="profile.html"
@@ -3859,5 +3950,7 @@ export const Profile = () => {
             </div>
         </div>
     </section>
+
+
 
 }

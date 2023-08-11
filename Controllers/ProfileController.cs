@@ -189,5 +189,16 @@ namespace LuvFinder.Controllers
             
             return Ok(true);
         }
+
+        [HttpGet]
+        [Route("profiles")]
+        public ActionResult GetProfiles()
+        {
+            var lst = db.Users.Select(x => x.Username).ToList();
+            lst.AddRange(db.Users.Select(x => x.Username).ToList());
+            lst.AddRange(db.Users.Select(x => x.Username).ToList());
+            return Ok(lst);
+
+        }
     }
 }

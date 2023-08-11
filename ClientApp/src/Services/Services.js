@@ -1,4 +1,24 @@
 
+export const LoadProfiles = async () => {
+
+    let response = await fetch(`profile/profiles`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        //method: 'POST',
+        //body: JSON.stringify({ quizid: quizid }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+
+}
 
 export const LoadProfile = async (userID) => {
 

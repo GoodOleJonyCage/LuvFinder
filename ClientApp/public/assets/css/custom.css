@@ -130,3 +130,34 @@ a:hover {
             border: none;
     }
 }
+
+
+/*checkmark css*/
+
+ul li.checkmark:before {
+    content: '\2713';
+    display: inline-block;
+    color: red;
+    padding: 0 6px 0 0;
+    font-weight: bold;
+}
+ul li.nocheckmark:before {
+    content: '';
+    display: inline-block;
+    color: red;
+    padding: 0 18px 0 0;
+}
+
+/*checkmark css*/
+
+.question-para {
+    text-align: justify;
+    letter-spacing: 2px;
+    word-spacing: 2px;
+}
+
+.question-para::first-letter {
+        font-size: 2.5em;
+        color: indianred;
+        line-height: 1;
+ }

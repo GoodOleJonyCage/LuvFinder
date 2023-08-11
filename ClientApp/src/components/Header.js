@@ -86,7 +86,13 @@ export const Header = () => {
                             </ul>
                             <div className="login-signout-container">
                                 <button
-                                    onClick={(e) => { if (username === null) navigate('login');  }}
+                                    onClick={(e) => {
+                                        if (username === null)
+                                            navigate('login');
+                                        else {
+                                            navigate('/editprofile');
+                                        }
+                                    }}
                                     className="username">
                                     <i className="icofont-user"></i> <span>{username === null ? "LOG IN" : username}</span> </button>
                                 <button

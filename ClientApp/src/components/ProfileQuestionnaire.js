@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
 import { LoadProfile, SaveProfile } from '../Services/Services'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const ProfileQuestionnaire = () => {
 
-    const params = new URLSearchParams(window.location.search);
-    let username = params.get('username');
+    const location = useLocation();
+    let { username } = location.state;
 
     const [questions, setquestions] = useState([]);
     const [errors, seterrors] = useState([]);

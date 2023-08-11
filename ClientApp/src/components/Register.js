@@ -24,7 +24,7 @@ export const Register = () => {
 
                 const isregistered = await RegisterUser(username, password);
                 if (isregistered)
-                    navigate('/createprofile?username=' + username);
+                    navigate('/createprofile', { state: { username: username }} );
 
             } catch (response) {
                 response.json().then(error => {

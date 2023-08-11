@@ -4,6 +4,7 @@ import { HomePage } from "./Pages/HomePage";
 import { LoginPage } from "./Pages/LoginPage";
 import { RegisterPage } from "./Pages/RegisterPage"
 import { ProfilePage } from "./Pages/ProfilePage"
+import { EditProfilePage } from "./Pages/EditProfilePage"
 import { CreateProfilePage } from "./Pages/CreateProfilePage"
 import { LogoutPage } from "./Pages/LogoutPage"
 const AppRoutes = [
@@ -33,6 +34,10 @@ const AppRoutes = [
     },
     {
         path: '/editprofile',
+        element: <EditProfilePage />
+    },
+    {
+        path: '/viewprofile',
         element: <ProfilePage />
     },
     {

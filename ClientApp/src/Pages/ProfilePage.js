@@ -1,7 +1,6 @@
 import { Profile } from '../components/Profile'
 
 export const ProfilePage = () => {
-
-
-    return <Profile></Profile>;
+   
+    return <Profile ></Profile>;
 }
