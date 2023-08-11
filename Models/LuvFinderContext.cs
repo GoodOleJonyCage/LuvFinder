@@ -31,7 +31,13 @@ public partial class LuvFinderContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserGender> UserGenders { get; set; }
+
+    public virtual DbSet<UserInfo> UserInfos { get; set; }
+
     public virtual DbSet<UserLike> UserLikes { get; set; }
+
+    public virtual DbSet<UserMaritalStatus> UserMaritalStatuses { get; set; }
 
     public virtual DbSet<UserMessage> UserMessages { get; set; }
 
@@ -169,6 +175,75 @@ public partial class LuvFinderContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<UserGender>(entity =>
+        {
+            entity.ToTable("UserGender");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Gender)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<UserInfo>(entity =>
+        {
+            entity.ToTable("UserInfo");
+
+            entity.HasIndex(e => e.UserId, "IDX_UserInfo");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CityId).HasColumnName("CityID");
+            entity.Property(e => e.CountryId).HasColumnName("CountryID");
+            entity.Property(e => e.Date)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Dob)
+                .HasColumnType("datetime")
+                .HasColumnName("DOB");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.GenderId).HasColumnName("GenderID");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.MaritalStatusId).HasColumnName("MaritalStatusID");
+            entity.Property(e => e.RegionId).HasColumnName("RegionID");
+            entity.Property(e => e.SeekingGenderId).HasColumnName("SeekingGenderID");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.City).WithMany(p => p.UserInfos)
+                .HasForeignKey(d => d.CityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserInfo_Cities");
+
+            entity.HasOne(d => d.Country).WithMany(p => p.UserInfos)
+                .HasForeignKey(d => d.CountryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserInfo_Countries");
+
+            entity.HasOne(d => d.Gender).WithMany(p => p.UserInfoGenders)
+                .HasForeignKey(d => d.GenderId)
+                .HasConstraintName("FK_UserInfo_UserGender");
+
+            entity.HasOne(d => d.MaritalStatus).WithMany(p => p.UserInfos)
+                .HasForeignKey(d => d.MaritalStatusId)
+                .HasConstraintName("FK_UserInfo_UserMaritalStatus");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.UserInfos)
+                .HasForeignKey(d => d.RegionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserInfo_Regions");
+
+            entity.HasOne(d => d.SeekingGender).WithMany(p => p.UserInfoSeekingGenders)
+                .HasForeignKey(d => d.SeekingGenderId)
+                .HasConstraintName("FK_UserInfo_UserGender1");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserInfos)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserInfo_User");
+        });
+
         modelBuilder.Entity<UserLike>(entity =>
         {
             entity.HasIndex(e => e.FromId, "IDX_UserLikes_FromID");
@@ -189,6 +264,16 @@ public partial class LuvFinderContext : DbContext
                 .HasForeignKey(d => d.ToId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UserLikes_User1");
+        });
+
+        modelBuilder.Entity<UserMaritalStatus>(entity =>
+        {
+            entity.ToTable("UserMaritalStatus");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Status)
+                .HasMaxLength(500)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<UserMessage>(entity =>

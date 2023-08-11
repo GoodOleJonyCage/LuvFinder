@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
-import { LoadUserProfile, SaveProfile } from '../Services/Services'
+import { LoadUserProfile, SaveProfile, LoadUserInfo } from '../Services/Services'
 import { UserStore } from './UserStore'
 import { useNavigate } from "react-router-dom"
 
 export const EditProfile = () => {
 
     const [questions, setquestions] = useState([]);
+    const [info, setinfo] = useState({});
     const [errors, seterrors] = useState([]);
     const [error, seterror] = useState('');
     const [btnPressed, setbtnPressed] = useState(false);
@@ -39,7 +40,7 @@ export const EditProfile = () => {
 
         try {
 
-            const profileSaved = await SaveProfile(getUsername(), questions);
+            const profileSaved = await SaveProfile(getUsername(), questions, info);
             if (profileSaved)
                 navigate('/home');
 
@@ -61,6 +62,11 @@ export const EditProfile = () => {
     const LoadData = async () => {
 
         try {
+
+            let vminfo = await LoadUserInfo(getUsername())
+            console.log(vminfo);
+            setinfo(vminfo);
+
             let vm = await LoadUserProfile(getUsername());
             //console.log(vm);
             setquestions(vm);
@@ -1580,6 +1586,72 @@ export const EditProfile = () => {
                                     <div className="row">
                                         <div className="col-xl-8">
                                             <article>
+                                                 
+                                                <div className="info-card mb-20">
+                                                    <div className="info-card-title">
+                                                        <h6>Base Info</h6>
+                                                    </div>
+                                                    <div className="info-card-content">
+                                                        <ul className="info-list">
+                                                                <li>
+                                                                    <p className="info-name">First Name</p>
+                                                                    <p className="info-details">
+                                                                    <input
+                                                                        onChange={(e) => { info.firstName = e.target.value }}
+                                                                        type="text" defaultValue={info.name}></input>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">Last Name</p>
+                                                                    <p className="info-details">
+                                                                        <input
+                                                                        onChange={(e) => { info.lastName = e.target.value }}
+                                                                            type="text" defaultValue={info.name}></input>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">I'm a</p>
+                                                                    <p className="info-details">
+                                                                    <input
+                                                                        onChange={(e) => { info.genderID = e.target.value }}
+                                                                        type="text" defaultValue={info.gendeID}/>
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">Loking for a</p>
+                                                                <p className="info-details">
+                                                                    <input
+                                                                        onChange={(e) => { info.seekingGenderID = e.target.value }}
+                                                                        type="text" defaultValue={info.seekingGenderID}/>
+                                                                </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">Marital Status</p>
+                                                                    <p className="info-details">
+                                                                    <input
+                                                                        onChange={(e) => { info.maritalStatusID = e.target.value }}
+                                                                        type="text" defaultValue={info.maritalStatusID} />
+                                                                    </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">Age</p>
+                                                                <p className="info-details">
+                                                                    <input
+                                                                        onChange={(e) => { info.dob = e.target.value }}
+                                                                        type="text" defaultValue={info.dob} />
+                                                                </p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">Date of Birth</p>
+                                                                    <p className="info-details">27-02-1996</p>
+                                                                </li>
+                                                                <li>
+                                                                    <p className="info-name">Address</p>
+                                                                <p className="info-details">{info.countryID} {info.cityID} {info.regionID}</p>
+                                                                </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                                 {
                                                     questions.length === 0 ? <LoadingDiv /> :
                                                         questions.map((q, index) => {
@@ -1633,44 +1705,7 @@ export const EditProfile = () => {
                                                             </div>
                                                         })
                                                 }
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Base Info</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Name</p>
-                                                                <p className="info-details">William Smith</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">I'm a</p>
-                                                                <p className="info-details">Woman</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Loking for a</p>
-                                                                <p className="info-details">Men</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Marital Status</p>
-                                                                <p className="info-details">Single</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Age</p>
-                                                                <p className="info-details">36</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Date of Birth</p>
-                                                                <p className="info-details">27-02-1996</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Address</p>
-                                                                <p className="info-details">Streop Rd, Peosur, Inphodux,
-                                                                    USA.</p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                                
                                                 <div className="info-card mb-20">
                                                     <div className="info-card-title">
                                                         <h6>Myself Summary</h6>

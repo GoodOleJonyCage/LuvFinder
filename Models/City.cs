@@ -12,4 +12,6 @@ public partial class City
     public string Name { get; set; } = null!;
 
     public virtual Region Region { get; set; } = null!;
+
+    public virtual ICollection<UserInfo> UserInfos { get; set; } = new List<UserInfo>();
 }

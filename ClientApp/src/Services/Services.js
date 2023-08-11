@@ -62,7 +62,28 @@ export const LoadUserProfile = async (username) => {
 
 }
 
-export const SaveProfile = async (username, vm) => {
+export const LoadUserInfo = async (username) => {
+
+    let response = await fetch(`profile/userinfo`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({ username: username }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+
+}
+
+export const SaveProfile = async (username, vm, info) => {
 
     let response = await fetch(`profile/profilesaved`, {
         headers: {
@@ -73,6 +94,7 @@ export const SaveProfile = async (username, vm) => {
         method: 'POST',
         body: JSON.stringify({
             username: username,
+            info: info,
             vm: vm
         }),
     });

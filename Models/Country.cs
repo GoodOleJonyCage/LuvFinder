@@ -14,4 +14,6 @@ public partial class Country
     public string Language { get; set; } = null!;
 
     public virtual ICollection<Region> Regions { get; set; } = new List<Region>();
+
+    public virtual ICollection<UserInfo> UserInfos { get; set; } = new List<UserInfo>();
 }

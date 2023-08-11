@@ -117,11 +117,38 @@ namespace LuvFinder.Controllers
         }
 
         [HttpPost]
+        [Route("userinfo")]
+        public ActionResult UserInfo([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var username = userParams.GetProperty("username").ToString();
+            var userID = (new UserController(new LuvFinderContext(), _config)).UserIDByName(username);
+
+            var userinfo = db.UserInfos.Where(u => u.UserId == userID)
+                .Select(info => new ViewModels.UserInfo()
+                {
+                    LastName = info.LastName ?? string.Empty,
+                    FirstName = info.FirstName ?? string.Empty,
+                    GenderID = info.GenderId ?? 0,
+                    MaritalStatusID = info.MaritalStatusId ?? 0,
+                    UserID = info.UserId ?? 0,
+                    DOB = info.Dob ?? DateTime.MinValue,
+                    SeekingGenderID = info.SeekingGenderId ?? 0,
+                    CountryID = info.CountryId,
+                    CityID = info.CityId,
+                    RegionID = info.RegionId,
+                }).SingleOrDefault();
+
+
+            return Ok(userinfo);
+        }
+
+        [HttpPost]
         [Route("profilesaved")]
         public ActionResult SaveProfile([FromBody] System.Text.Json.JsonElement param)
         {
             var username = param.GetProperty("username").ToString();
             var vm = JsonConvert.DeserializeObject<List<ViewModels.ProfileQuestion>>(param.GetProperty("vm").ToString());
+            var vminfo = JsonConvert.DeserializeObject<ViewModels.UserInfo>(param.GetProperty("info").ToString());
             var userID = (new UserController(new LuvFinderContext(), _config)).UserIDByName(username);
 
             List<string> lstErrors = new List<string>();
@@ -190,6 +217,7 @@ namespace LuvFinder.Controllers
             return Ok(true);
         }
 
+          
         [HttpGet]
         [Route("profiles")]
         public ActionResult GetProfiles()

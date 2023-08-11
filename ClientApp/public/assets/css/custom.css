@@ -161,3 +161,7 @@ ul li.nocheckmark:before {
         color: indianred;
         line-height: 1;
  }
+
+input[type="text"]{
+    color:black;
+}

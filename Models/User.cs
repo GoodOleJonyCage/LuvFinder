@@ -15,6 +15,8 @@ public partial class User
 
     public bool? IsAdmin { get; set; }
 
+    public virtual ICollection<UserInfo> UserInfos { get; set; } = new List<UserInfo>();
+
     public virtual ICollection<UserLike> UserLikeFroms { get; set; } = new List<UserLike>();
 
     public virtual ICollection<UserLike> UserLikeTos { get; set; } = new List<UserLike>();
