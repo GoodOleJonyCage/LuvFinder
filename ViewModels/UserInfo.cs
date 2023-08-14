@@ -24,19 +24,25 @@ namespace LuvFinder.ViewModels
     {
         public string LastName { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
+        
         public int GenderID { get; set; }
+        public string Gender { get; set; } = string.Empty;
+
+        public int SeekingGenderID { get; set; }
+        public string SeekingGender { get; set; } = string.Empty;
+
         public int MaritalStatusID { get; set; }
         public int UserID { get; set; }
         public DateTime DOB { get; set; }
-        public int SeekingGenderID { get; set; }
+        
         public int CountryID { get; set; }
-        public string CountryName { get; set; }
-        
+        public string CountryName { get; set; } = string.Empty;
+
         public int CityID { get; set; }
-        public string CityName { get; set; }
-        
+        public string CityName { get; set; } = string.Empty;
+
         public int RegionID { get; set; }
-        public string RegionName { get; set; }
+        public string RegionName { get; set; } = string.Empty;
 
         public List<Country> Countries = new List<Country>();
         public List<Region> Regions = new List<Region>();

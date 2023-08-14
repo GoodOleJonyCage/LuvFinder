@@ -1,3 +1,39 @@
+export const LoadGenders = async () => {
+
+    let response = await fetch(`profile/genders`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const LoadMaritalStatuses = async () => {
+
+    let response = await fetch(`profile/maritalstatuses`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
 export const LoadCountries = async () => {
 
     let response = await fetch(`profile/countries`, {

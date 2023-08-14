@@ -162,15 +162,43 @@ ul li.nocheckmark:before {
         line-height: 1;
  }
 
-input[type="text"]{
-    color:black;
+/*mui autocomplete*/
+ 
+.MuiInputLabel-root {
+    color: white !important;
+    position:relative;
+    margin-top:-7px;
+}
+.MuiAutocomplete-input{
+    color:white !important;
+}
+.MuiOutlinedInput-root {
+    border: solid 1px white;
 }
 
 .MuiTextField-root {
-    background-color: white;
-    width: 200px !important;
+    color: white;
+    width: 180px !important;
+    border-radius: 5px;
 }
 
- .MuiAutocomplete-option {
+.MuiAutocomplete-option {
     margin-left: 20px;
+}
+
+/*mui autocomplete*/
+
+    .profile-form input[type="text"],
+    .profile-form select {
+        color: black;
+        font-size: 14px;
+        padding: 8px;
+        border-radius: 5px;
+        width: 180px;
+    }
+
+.info-details .region-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

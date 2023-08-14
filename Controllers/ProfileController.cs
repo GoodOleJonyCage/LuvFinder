@@ -204,6 +204,35 @@ namespace LuvFinder.Controllers
             
             if (userID == 0 )
                 return BadRequest("User Not found");
+
+            try
+            {
+                if (vminfo != null)
+                {
+                    var infotodelete = db.UserInfos.Where(u => u.UserId == userID).SingleOrDefault();
+                    if (infotodelete != null)
+                        db.UserInfos.Remove(infotodelete);
+
+                    db.UserInfos.Add(new Models.UserInfo()
+                    {
+                        FirstName = vminfo.FirstName,
+                        LastName = vminfo.LastName,
+                        CityId = vminfo.CityID,
+                        CountryId = short.Parse(vminfo.CountryID.ToString()),
+                        RegionId = vminfo.RegionID,
+                        Dob = DateTime.Now,
+                        GenderId = vminfo.GenderID,
+                        SeekingGenderId = vminfo.SeekingGenderID,
+                        MaritalStatusId = vminfo.MaritalStatusID,
+                        UserId = userID
+                    });
+                }
+            }
+            catch (Exception exc)
+            {
+                lstErrors.Add($"Error while updating basic info {exc.Message}");
+                return BadRequest(lstErrors);
+            }
             
             if (vm != null)
             {
@@ -266,7 +295,36 @@ namespace LuvFinder.Controllers
             return Ok(true);
         }
 
-          
+
+        [HttpGet]
+        [Route("maritalstatuses")]
+        public ActionResult MaritalStatuses()
+        {
+            var lst = db.UserMaritalStatuses
+                        .Select(m => new ViewModels.MaritalStatus()
+                        {
+                            Id = m.Id,
+                            Name = m.Status??string.Empty,
+                        }).ToList();
+
+            return Ok(lst);
+        }
+
+        [HttpGet]
+        [Route("genders")]
+        public ActionResult Genders()
+        {
+            var lst = db.UserGenders
+                        .Select(m => new ViewModels.Gender()
+                        {
+                            Id = m.Id,
+                            Name = m.Gender ?? string.Empty,
+                        }).ToList();
+
+            return Ok(lst);
+        }
+
+
         [HttpGet]
         [Route("profiles")]
         public ActionResult GetProfiles()

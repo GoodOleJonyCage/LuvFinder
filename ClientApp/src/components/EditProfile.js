@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
-import { LoadUserProfile, SaveProfile, LoadUserInfo, LoadCountries, LoadRegions, LoadCities } from '../Services/Services'
+import { LoadUserProfile, SaveProfile, LoadUserInfo, LoadCountries, LoadRegions, LoadCities, LoadMaritalStatuses, LoadGenders } from '../Services/Services'
 import { UserStore } from './UserStore'
 import { useNavigate } from "react-router-dom"
-import { Autocomplete, TextField, Button } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 
 export const EditProfile = () => {
 
@@ -16,6 +16,9 @@ export const EditProfile = () => {
     const [countries, setcountries] = useState([]);
     const [regions, setregions] = useState([]);
     const [cities, setcities] = useState([]);
+
+    const [maritalstatuses, setmaritalstatuses] = useState([]);
+    const [genders, setgenders] = useState([]);
 
     const [btnPressed, setbtnPressed] = useState(false);
     const navigate = useNavigate();
@@ -115,6 +118,13 @@ export const EditProfile = () => {
 
             let vminfo = await LoadUserInfo(getUsername())
             setinfo(vminfo);
+            //console.log(vminfo);
+            
+            let statuses = await LoadMaritalStatuses();
+            setmaritalstatuses(statuses);
+
+            let genderlist = await LoadGenders();
+            setgenders(genderlist);
 
             /*load countries, city and regions  */
             LoadCountryList();
@@ -127,8 +137,6 @@ export const EditProfile = () => {
             let vm = await LoadUserProfile(getUsername());
             //console.log(vm);
             setquestions(vm);
-
-           
 
         } catch (e) {
 
@@ -1651,14 +1659,14 @@ export const EditProfile = () => {
                                                     <div className="info-card-title">
                                                         <h6>Base Info</h6>
                                                     </div>
-                                                    <div className="info-card-content">
+                                                    <div className="info-card-content profile-form">
                                                         <ul className="info-list">
                                                                 <li>
                                                                     <p className="info-name">First Name</p>
                                                                     <p className="info-details">
                                                                     <input
                                                                         onChange={(e) => { info.firstName = e.target.value }}
-                                                                        type="text" defaultValue={info.name}></input>
+                                                                        type="text" defaultValue={info.firstName}></input>
                                                                     </p>
                                                                 </li>
                                                                 <li>
@@ -1666,35 +1674,51 @@ export const EditProfile = () => {
                                                                     <p className="info-details">
                                                                         <input
                                                                         onChange={(e) => { info.lastName = e.target.value }}
-                                                                            type="text" defaultValue={info.name}></input>
+                                                                        type="text" defaultValue={info.lastName}></input>
                                                                     </p>
                                                                 </li>
                                                                 <li>
                                                                     <p className="info-name">I'm a</p>
                                                                     <p className="info-details">
-                                                                    <input
-                                                                        onChange={(e) => { info.genderID = e.target.value }}
-                                                                        type="text" defaultValue={info.gendeID}/>
+                                                                    <select id="user-gender" value={info.genderID}
+                                                                        onChange={(e) => { info.genderID = e.target.value;}}>
+                                                                        {
+                                                                            genders.map((gender, index) => {
+                                                                                return <option key={index} value={gender.id}>{gender.name}</option>
+                                                                            })
+                                                                        }
+                                                                    </select>
                                                                     </p>
                                                                 </li>
                                                                 <li>
                                                                     <p className="info-name">Loking for a</p>
-                                                                <p className="info-details">
-                                                                    <input
-                                                                        onChange={(e) => { info.seekingGenderID = e.target.value }}
-                                                                        type="text" defaultValue={info.seekingGenderID}/>
-                                                                </p>
+                                                                    <p className="info-details">
+                                                                    <select id="user-gender" value={info.seekingGenderID}
+                                                                            onChange={(e) => { info.seekingGenderID = e.target.value; }}>
+                                                                            {
+                                                                                genders.map((gender, index) => {
+                                                                                    return <option key={index} value={gender.id}>{gender.name}</option>
+                                                                                })
+                                                                            }
+                                                                        </select>
+                                                                    </p>
                                                                 </li>
                                                                 <li>
                                                                     <p className="info-name">Marital Status</p>
                                                                     <p className="info-details">
-                                                                    <input
-                                                                        onChange={(e) => { info.maritalStatusID = e.target.value }}
-                                                                        type="text" defaultValue={info.maritalStatusID} />
+                                                                    <select id="user-maritalstatus"
+                                                                        value={info.maritalStatusID}
+                                                                        onChange={(e) => { info.maritalStatusID = e.target.value;}} >
+                                                                        {
+                                                                            maritalstatuses.map((status, index) => {
+                                                                                return <option key={index} value={status.id}>{status.name}</option>  
+                                                                            })
+                                                                        }
+                                                                    </select>
                                                                     </p>
                                                                 </li>
                                                                 <li>
-                                                                    <p className="info-name">Age</p>
+                                                                <p className="info-name">Age</p>
                                                                 <p className="info-details">
                                                                     <input
                                                                         onChange={(e) => { info.dob = e.target.value }}
@@ -1708,63 +1732,71 @@ export const EditProfile = () => {
                                                                 <li>
                                                                     <p className="info-name">Address</p>
                                                                 <div className="info-details">
-                                                                    <div className="mb-3">
-                                                                        {  countries.length === 0 ? <></> :
-                                                                            <Autocomplete
-                                                                                disablePortal
-                                                                                id="autocom-countries"
-                                                                                value={getSelectedCountry()}
-                                                                                onChange={(event, value) => {
-                                                                                    info.countryID = value.id;
-                                                                                    info.countryName = value.name;
-                                                                                    LoadRegionsList(info.countryID);
-                                                                                }}
-                                                                                
-                                                                                options={countries}
-                                                                                getOptionLabel={(option) => option.name || ""}
-                                                                                sx={{ width: 300 }}
-                                                                                renderInput={(params) => <TextField  {...params} label="Country" />}
-                                                                            />
-                                                                        }
+                                                                    <div className="mb-3 region-container">
+                                                                        <div>Country</div>
+                                                                        <div>
+                                                                          {countries.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                                                <Autocomplete
+                                                                                    disablePortal
+                                                                                    id="autocom-countries"
+                                                                                    value={getSelectedCountry()}
+                                                                                    onChange={(event, value) => {
+                                                                                        info.countryID = value.id;
+                                                                                        info.countryName = value.name;
+                                                                                        LoadRegionsList(info.countryID);
+                                                                                    }}
+
+                                                                                    options={countries}
+                                                                                    getOptionLabel={(option) => option.name || ""}
+                                                                                    sx={{ width: 300 }}
+                                                                                    renderInput={(params) => <TextField  {...params} label="Country" />}
+                                                                                />
+                                                                            }
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="mb-3">
-                                                                        {regions.length === 0 ? <></> :
-                                                                            <Autocomplete
-                                                                                disablePortal
-                                                                                id="autocom-region"
-                                                                                value={getSelectedRegion()}
-                                                                                onChange={(event, value) => {
-                                                                                    if (value) {
-                                                                                        info.regionID = value.id;
-                                                                                        info.regionName = value.name;
-                                                                                        LoadCitiesList(info.regionID);
-                                                                                    }
-                                                                                }}
-                                                                                options={regions}
-                                                                                getOptionLabel={(option) => option.name || ""}
-                                                                                sx={{ width: 300 }}
-                                                                                renderInput={(params) => <TextField  {...params} label="Region" />}
-                                                                            />
-                                                                        }
+                                                                    <div className="mb-3 region-container">
+                                                                        <div>Region</div>
+                                                                        <div>
+                                                                            {regions.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                                                <Autocomplete
+                                                                                    disablePortal
+                                                                                    id="autocom-region"
+                                                                                    value={getSelectedRegion()}
+                                                                                    onChange={(event, value) => {
+                                                                                        if (value) {
+                                                                                            info.regionID = value.id;
+                                                                                            info.regionName = value.name;
+                                                                                            LoadCitiesList(info.regionID);
+                                                                                        }
+                                                                                    }}
+                                                                                    options={regions}
+                                                                                    getOptionLabel={(option) => option.name || ""}
+                                                                                    sx={{ width: 300 }}
+                                                                                    renderInput={(params) => <TextField  {...params} label="Region" />}
+                                                                                />
+                                                                            }
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="mb-3">
-                                                                        {cities.length === 0 ? <></> :
-                                                                            <Autocomplete
-                                                                            disablePortal
-                                                                            onChange={(event, value) => {
-                                                                                info.cityID = value.id;
-                                                                                info.cityName = value.name;
-                                                                            }}
-                                                                            id="autocom-cities"
-                                                                            value={getSelectedCity()}
-                                                                            options={cities}
-                                                                            getOptionLabel={(option) => option.name || ""}
-                                                                            sx={{ width: 300 }}
-                                                                            renderInput={(params) => <TextField {...params} label="City" />}
-                                                                            />
-                                                                        }
+                                                                    <div className="mb-3 region-container">
+                                                                        <div>City</div>
+                                                                        <div>
+                                                                            {cities.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                                                <Autocomplete
+                                                                                    disablePortal
+                                                                                    onChange={(event, value) => {
+                                                                                        info.cityID = value.id;
+                                                                                        info.cityName = value.name;
+                                                                                    }}
+                                                                                    id="autocom-cities"
+                                                                                    value={getSelectedCity()}
+                                                                                    options={cities}
+                                                                                    getOptionLabel={(option) => option.name || ""}
+                                                                                    sx={{ width: 300 }}
+                                                                                    renderInput={(params) => <TextField {...params} label="City" />}
+                                                                                />
+                                                                            }
+                                                                        </div>
                                                                     </div>
-                                                                    <span>{info.countryID}, {info.regionID},{info.cityID}, </span>
                                                                 </div>
                                                                 </li>
                                                         </ul>
