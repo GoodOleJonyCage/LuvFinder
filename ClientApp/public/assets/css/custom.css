@@ -165,3 +165,9 @@ ul li.nocheckmark:before {
 input[type="text"]{
     color:black;
 }
+
+.MuiTextField-root {
+    background-color: white;
+    width: 200px !important;
+}
+    

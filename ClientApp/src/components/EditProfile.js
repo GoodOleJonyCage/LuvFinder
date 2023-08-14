@@ -1,19 +1,25 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
-import { LoadUserProfile, SaveProfile, LoadUserInfo } from '../Services/Services'
+import { LoadUserProfile, SaveProfile, LoadUserInfo, LoadCountries, LoadRegions, LoadCities } from '../Services/Services'
 import { UserStore } from './UserStore'
 import { useNavigate } from "react-router-dom"
+import { Autocomplete, TextField, Button } from '@mui/material';
 
 export const EditProfile = () => {
 
     const [questions, setquestions] = useState([]);
+
     const [info, setinfo] = useState({});
     const [errors, seterrors] = useState([]);
     const [error, seterror] = useState('');
+
+    const [countries, setcountries] = useState([]);
+    const [regions, setregions] = useState([]);
+    const [cities, setcities] = useState([]);
+
     const [btnPressed, setbtnPressed] = useState(false);
     const navigate = useNavigate();
-    const { getUsername } = UserStore();
-
+    const {getUsername } = UserStore();
 
     const Update_On_Checkbox = (qindex, aindex, val) => {
 
@@ -59,17 +65,71 @@ export const EditProfile = () => {
         }
     }
 
+    const LoadCountryList = async () => {
+        let countrylist = await LoadCountries();
+        setcountries(countrylist);
+    }
+    const LoadRegionsList = async (countryid) => {
+        let regionList = await LoadRegions(countryid);
+        setregions(regionList);
+    }
+    const LoadCitiesList = async (regionid) => {
+        let cityList = await LoadCities(regionid);
+        setcities(cityList);
+    }
+
+    const getSelectedCountry = () => {
+        const item = countries.find((opt) => {
+            if (opt.id === info.countryID) {
+                return opt;
+            }
+        })
+        return item || {};
+
+    }
+
+    const getSelectedRegion = () => {
+        const item = regions.find((opt) => {
+            if (opt.id === info.regionID) {
+                
+                return opt;
+            }
+        })
+        return item || {};
+
+    }
+
+    const getSelectedCity = () => {
+        const item = cities.find((opt) => {
+            if (opt.id === info.cityID) {
+                return opt;
+            }
+        })
+        return item || {};
+
+    }
+
     const LoadData = async () => {
 
         try {
 
             let vminfo = await LoadUserInfo(getUsername())
-            console.log(vminfo);
             setinfo(vminfo);
+
+            /*load countries, city and regions  */
+            LoadCountryList();
+            if (vminfo.countryID > 0)
+                LoadRegionsList(vminfo.countryID);
+            if (vminfo.regionID > 0)
+                LoadCitiesList(vminfo.regionID);
+            /*load countries, city and regions  */
 
             let vm = await LoadUserProfile(getUsername());
             //console.log(vm);
             setquestions(vm);
+
+           
+
         } catch (e) {
 
         }
@@ -1647,7 +1707,64 @@ export const EditProfile = () => {
                                                                 </li>
                                                                 <li>
                                                                     <p className="info-name">Address</p>
-                                                                <p className="info-details">{info.countryID} {info.cityID} {info.regionID}</p>
+                                                                <div className="info-details">
+                                                                    <div className="mb-3">
+                                                                        {  countries.length === 0 ? <></> :
+                                                                            <Autocomplete
+                                                                                disablePortal
+                                                                                id="autocom-countries"
+                                                                                value={getSelectedCountry()}
+                                                                                onChange={(event, value) => {
+                                                                                    info.countryID = value.id;
+                                                                                    info.countryName = value.name;
+                                                                                    LoadRegionsList(info.countryID);
+                                                                                }}
+                                                                                
+                                                                                options={countries}
+                                                                                getOptionLabel={(option) => option.name || ""}
+                                                                                sx={{ width: 300 }}
+                                                                                renderInput={(params) => <TextField  {...params} label="Country" />}
+                                                                            />
+                                                                        }
+                                                                    </div>
+                                                                    <div className="mb-3">
+                                                                        {regions.length === 0 ? <></> :
+                                                                            <Autocomplete
+                                                                                disablePortal
+                                                                                id="autocom-region"
+                                                                                value={getSelectedRegion()}
+                                                                                onChange={(event, value) => {
+                                                                                    if (value) {
+                                                                                        info.regionID = value.id;
+                                                                                        info.regionName = value.name;
+                                                                                        LoadCitiesList(info.regionID);
+                                                                                    }
+                                                                                }}
+                                                                                options={regions}
+                                                                                getOptionLabel={(option) => option.name || ""}
+                                                                                sx={{ width: 300 }}
+                                                                                renderInput={(params) => <TextField  {...params} label="Region" />}
+                                                                            />
+                                                                        }
+                                                                    </div>
+                                                                    <div className="mb-3">
+                                                                        {cities.length === 0 ? <></> : <Autocomplete
+                                                                            disablePortal
+                                                                            onChange={(event, value) => {
+                                                                                info.cityID = value.id;
+                                                                                info.cityName = value.name;
+                                                                            }}
+                                                                            id="autocom-cities"
+                                                                            value={getSelectedCity()}
+                                                                            options={cities}
+                                                                            getOptionLabel={(option) => option.name || ""}
+                                                                            sx={{ width: 300 }}
+                                                                            renderInput={(params) => <TextField {...params} label="City" />}
+                                                                            />
+                                                                        }
+                                                                    </div>
+                                                                    <span>{info.countryID}, {info.regionID},{info.cityID}, </span>
+                                                                </div>
                                                                 </li>
                                                         </ul>
                                                     </div>

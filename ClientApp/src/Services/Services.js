@@ -1,3 +1,62 @@
+export const LoadCountries = async () => {
+
+    let response = await fetch(`profile/countries`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        //method: 'POST',
+        //body: JSON.stringify({ quizid: quizid }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const LoadRegions = async (countryid) => {
+
+    let response = await fetch(`profile/regions`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({ countryid: countryid }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const LoadCities = async (regionid) => {
+
+    let response = await fetch(`profile/cities`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({regionid: regionid }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
 
 export const LoadProfiles = async () => {
 

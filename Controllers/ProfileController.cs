@@ -116,6 +116,53 @@ namespace LuvFinder.Controllers
             return Ok(lstProfileQuestions);
         }
 
+        [HttpGet]
+        [Route("countries")]
+        public ActionResult Countries()
+        {
+
+            var lst = db.Countries.Select(c => new ViewModels.Country()
+            {
+                ID = c.Id,
+                Name = c.Name
+            }).ToList();
+
+            return Ok(lst);
+        }
+
+        [HttpPost]
+        [Route("regions")]
+        public ActionResult Regions([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var countryid = Int32.Parse(userParams.GetProperty("countryid").ToString());
+            var lst = db.Regions
+                .Where( r => r.CountryId == countryid)
+                .Select(c => new ViewModels.Region()
+            {
+                ID = c.Id,
+                Name = c.Name
+            }).ToList();
+
+            return Ok(lst);
+        }
+
+        [HttpPost]
+        [Route("cities")]
+        public ActionResult Cities([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var regionid = Int32.Parse(userParams.GetProperty("regionid").ToString());
+            //var lstRegions = db.Regions.Where(r => r.CountryId == countryid).ToList();
+            //var region = lstRegions.Where(r => r.Id == regionid).SingleOrDefault();
+            var lst = db.Cities.Where(c => c.RegionId == regionid)
+                        .Select(c => new ViewModels.City()
+                        { 
+                            ID = c.Id,
+                            Name =c.Name
+                        }).ToList();
+
+            return Ok(lst);
+        }
+
         [HttpPost]
         [Route("userinfo")]
         public ActionResult UserInfo([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
@@ -134,8 +181,10 @@ namespace LuvFinder.Controllers
                     DOB = info.Dob ?? DateTime.MinValue,
                     SeekingGenderID = info.SeekingGenderId ?? 0,
                     CountryID = info.CountryId,
+                    CountryName = "Pakistan",
                     CityID = info.CityId,
                     RegionID = info.RegionId,
+                    
                 }).SingleOrDefault();
 
 

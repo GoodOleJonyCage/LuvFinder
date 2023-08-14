@@ -1,5 +1,6 @@
 using LuvFinder.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -26,6 +27,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
 });
+
+/*Max size of request*/
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.ValueCountLimit = 10; //default 1024
+    options.ValueLengthLimit = int.MaxValue; //not recommended value
+    options.MultipartBodyLengthLimit = long.MaxValue; //not recommended value
+    options.MemoryBufferThreshold = Int32.MaxValue;
+});
+
+builder.Services.AddMvc(options =>
+{
+    options.MaxModelBindingCollectionSize = int.MaxValue;
+});
+/*Max size of request*/
 
 var app = builder.Build();
 
