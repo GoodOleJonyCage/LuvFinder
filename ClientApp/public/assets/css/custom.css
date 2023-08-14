@@ -170,4 +170,7 @@ input[type="text"]{
     background-color: white;
     width: 200px !important;
 }
-    
+
+ .MuiAutocomplete-option {
+    margin-left: 20px;
+}

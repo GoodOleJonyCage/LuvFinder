@@ -1748,7 +1748,8 @@ export const EditProfile = () => {
                                                                         }
                                                                     </div>
                                                                     <div className="mb-3">
-                                                                        {cities.length === 0 ? <></> : <Autocomplete
+                                                                        {cities.length === 0 ? <></> :
+                                                                            <Autocomplete
                                                                             disablePortal
                                                                             onChange={(event, value) => {
                                                                                 info.cityID = value.id;
