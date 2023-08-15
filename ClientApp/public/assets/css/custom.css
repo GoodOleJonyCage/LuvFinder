@@ -202,3 +202,20 @@ ul li.nocheckmark:before {
     justify-content: space-between;
     align-items: center;
 }
+
+.info-details .region-container-viewmode {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.info-details .region-container-viewmode div {
+        flex: 0 0 70px;
+
+}
+.info-details .region-container-viewmode label {
+   
+}
+
+.lab-item  {
+    cursor:pointer !important;
+}

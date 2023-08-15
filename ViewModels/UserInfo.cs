@@ -32,7 +32,11 @@ namespace LuvFinder.ViewModels
         public string SeekingGender { get; set; } = string.Empty;
 
         public int MaritalStatusID { get; set; }
+        public string MaritalStatus { get; set; } = string.Empty;
+
+        public int Age {  get; set; }   
         public int UserID { get; set; }
+        
         public DateTime DOB { get; set; }
         
         public int CountryID { get; set; }

@@ -30,7 +30,6 @@ export const EditProfile = () => {
         updatedquestions[qindex].question.answers[aindex].selected = val;
         setquestions(updatedquestions);
     }
-
     const Update_On_Radio = (qindex, aindex, val) => {
 
         let updatedquestions = [...questions];
@@ -40,7 +39,6 @@ export const EditProfile = () => {
         updatedquestions[qindex].question.answers[aindex].selected = val;
         setquestions(updatedquestions);
     }
-
     const submitProfile = async () => {
 
         seterrors([]);
@@ -80,7 +78,6 @@ export const EditProfile = () => {
         let cityList = await LoadCities(regionid);
         setcities(cityList);
     }
-
     const getSelectedCountry = () => {
         const item = countries.find((opt) => {
             if (opt.id === info.countryID) {
@@ -90,7 +87,6 @@ export const EditProfile = () => {
         return item || {};
 
     }
-
     const getSelectedRegion = () => {
         const item = regions.find((opt) => {
             if (opt.id === info.regionID) {
@@ -101,7 +97,6 @@ export const EditProfile = () => {
         return item || {};
 
     }
-
     const getSelectedCity = () => {
         const item = cities.find((opt) => {
             if (opt.id === info.cityID) {
@@ -118,7 +113,7 @@ export const EditProfile = () => {
 
             let vminfo = await LoadUserInfo(getUsername())
             setinfo(vminfo);
-            //console.log(vminfo);
+           
             
             let statuses = await LoadMaritalStatuses();
             setmaritalstatuses(statuses);
@@ -1654,7 +1649,6 @@ export const EditProfile = () => {
                                     <div className="row">
                                         <div className="col-xl-8">
                                             <article>
-                                                 
                                                 <div className="info-card mb-20">
                                                     <div className="info-card-title">
                                                         <h6>Base Info</h6>

@@ -1,22 +1,45 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
-import { LoadUserProfile } from '../Services/Services'
+import { LoadUserProfile, LoadUserInfo } from '../Services/Services'
+/*import { UserStore } from './UserStore'*/
 import { useLocation } from 'react-router-dom';
 
 export const Profile = () => {
 
+    const [info, setinfo] = useState({});
+    const [infoerror, setinfoerror] = useState('');
+    const [infoloaded, setinfoloaded] = useState(false);
+    
     const [questions, setquestions] = useState([]);
+    const [questionserror, setquestionserror] = useState('');
+    const [questionsloaded, setquestionsloaded] = useState(false);
+
     const location = useLocation();
     let { username } = location.state;
     
     const LoadData = async () => {
 
         try {
-            let vm = await LoadUserProfile(username);
-             //console.log(vm);
-            setquestions(vm);
-        } catch (e) {
+            let vminfo = await LoadUserInfo(username)
+            setinfo(vminfo);
+            setinfoloaded(true);
+            //console.log(vminfo);
+        }
+        catch (response) {
+            response.json().then((e) => {
+                setinfoerror(e);
+            })
+        }
 
+        try {
+            let vm = await LoadUserProfile(username);
+            setquestions(vm);
+            setquestionsloaded(true);
+        } 
+        catch (response) {
+            response.json().then((e) => {
+                setquestionserror(e);
+            })
         }
     }
     useEffect(() => {
@@ -1531,176 +1554,246 @@ export const Profile = () => {
                                     <div className="row">
                                         <div className="col-xl-8">
                                             <article>
+                                                {!infoloaded && infoerror.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                    infoerror.length > 0 ? <div className="highlight-error text-center">{infoerror}</div> :
+                                                    <div className="info-card mb-20">
+                                                            <div className="info-card-title">
+                                                                <h6>Base Info</h6>
+                                                            </div>
+                                                            <div className="info-card-content profile-form">
+                                                                <ul className="info-list">
+                                                                    <li>
+                                                                        <p className="info-name">First Name</p>
+                                                                        <p className="info-details">
+                                                                            <label>{info.firstName}</label>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">Last Name</p>
+                                                                        <p className="info-details">
+                                                                            <label>{info.lastName}</label>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">I'm a</p>
+                                                                        <p className="info-details">
+                                                                            <label>{info.gender}</label>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">Loking for a</p>
+                                                                        <p className="info-details">
+                                                                            <label>{info.seekingGender}</label>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">Marital Status</p>
+                                                                        <p className="info-details">
+                                                                            <label>{info.maritalStatus}</label>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">Age</p>
+                                                                        <p className="info-details">
+                                                                            <label>{info.age}</label>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">Date of Birth</p>
+                                                                        <label>{info.dob}</label>
+                                                                    </li>
+                                                                    <li>
+                                                                        <p className="info-name">Address</p>
+                                                                        <div className="info-details">
+                                                                            <div className="mb-3 region-container-viewmode">
+                                                                                <div>Country</div>
+                                                                                <label>{info.countryName}</label>
+                                                                            </div>
+                                                                            <div className="mb-3 region-container-viewmode">
+                                                                                <div>Region</div>
+                                                                                <label>{info.regionName}</label>
+                                                                            </div>
+                                                                            <div className="mb-3 region-container-viewmode">
+                                                                                <div>City</div>
+                                                                                <label>{info.cityName}</label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                }
                                                 {
-                                                    questions.length === 0 ? <LoadingDiv /> :
+                                                    !questionsloaded && questionserror.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                        questionserror.length > 0 ? <div className="highlight-error text-center">{questionserror}</div> :
                                                         questions.map((q, index) => {
                                                             return <div className="info-card mb-20" key={index}>
-                                                                        <div className="info-card-title">
-                                                                            <h6>{q.question.shortDesc}</h6>
-                                                                        </div>
-                                                                        <div className="info-card-content">
-                                                                            {
-                                                                                q.question.answers.length === 0 ?
-                                                                                    <>
-                                                                                        <div className="mb-3">{q.question.text}</div>
-                                                                                        <p className="question-para">{q.answerText}</p>
-                                                                                    </> :
-                                                                                    <ul className="info-list">
-                                                                                        <li>
-                                                                                            <p className="info-name">{q.question.text}</p>
-                                                                                            <div className="info-details">
-                                                                                                {
-                                                                                                q.question.answers.map((a, aindex) => {
-                                                                                                        return <ul key={aindex} className="questionnaire_Control_container">
-                                                                                                                <li className={a.selected ? "checkmark":"nocheckmark"}>{a.text}</li>
-                                                                                                               </ul>
-                                                                                                    })
-                                                                                                }
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                            }
-                                                                        </div>
-                                                                    </div>
-                                                            })
+                                                                <div className="info-card-title">
+                                                                    <h6>{q.question.shortDesc}</h6>
+                                                                </div>
+                                                                <div className="info-card-content">
+                                                                    {
+                                                                        q.question.answers.length === 0 ?
+                                                                            <>
+                                                                                <div className="mb-3">{q.question.text}</div>
+                                                                                <p className="question-para">{q.answerText}</p>
+                                                                            </> :
+                                                                            <ul className="info-list">
+                                                                                <li>
+                                                                                    <p className="info-name">{q.question.text}</p>
+                                                                                    <div className="info-details">
+                                                                                        {
+                                                                                            q.question.answers.map((a, aindex) => {
+                                                                                                return <ul key={aindex} className="questionnaire_Control_container">
+                                                                                                    <li className={a.selected ? "checkmark" : "nocheckmark"}>{a.text}</li>
+                                                                                                </ul>
+                                                                                            })
+                                                                                        }
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        })
                                                 }
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Base Info</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Name</p>
-                                                                <p className="info-details">William Smith</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">I'm a</p>
-                                                                <p className="info-details">Woman</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Loking for a</p>
-                                                                <p className="info-details">Men</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Marital Status</p>
-                                                                <p className="info-details">Single</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Age</p>
-                                                                <p className="info-details">36</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Date of Birth</p>
-                                                                <p className="info-details">27-02-1996</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Address</p>
-                                                                <p className="info-details">Streop Rd, Peosur, Inphodux,
-                                                                    USA.</p>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Myself Summary</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <p>Collaboratively innovate compelling mindshare after
-                                                            prospective partnerships Competently sereiz long-term
-                                                            high-impact internal or "organic" sources via user friendly
-                                                            strategic themesr areas creat Dramatically coordinate
-                                                            premium partnerships rather than standards compliant
-                                                            technologies ernd Dramatically matrix ethical collaboration
-                                                            and idea-sharing through opensource methodologies and
-                                                            Intrinsicly grow collaborative platforms vis-a-vis effective
-                                                            scenarios. Energistically strategize cost effective ideas
-                                                            before the worke unde.</p>
-                                                    </div>
-                                                </div>
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Looking For</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Things I'm looking for</p>
-                                                                <p className="info-details">I want a funny person</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Whatever I like</p>
-                                                                <p className="info-details">I like to travel a lot</p>
-                                                            </li>
-                                                        </ul>
+                                                {/*<div className="info-card mb-20">*/}
+                                                {/*    <div className="info-card-title">*/}
+                                                {/*        <h6>Base Info</h6>*/}
+                                                {/*    </div>*/}
+                                                {/*    <div className="info-card-content">*/}
+                                                {/*        <ul className="info-list">*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Name</p>*/}
+                                                {/*                <p className="info-details">William Smith</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">I'm a</p>*/}
+                                                {/*                <p className="info-details">Woman</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Loking for a</p>*/}
+                                                {/*                <p className="info-details">Men</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Marital Status</p>*/}
+                                                {/*                <p className="info-details">Single</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Age</p>*/}
+                                                {/*                <p className="info-details">36</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Date of Birth</p>*/}
+                                                {/*                <p className="info-details">27-02-1996</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Address</p>*/}
+                                                {/*                <p className="info-details">Streop Rd, Peosur, Inphodux,*/}
+                                                {/*                    USA.</p>*/}
+                                                {/*            </li>*/}
+                                                {/*        </ul>*/}
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
+                                                {/*<div className="info-card mb-20">*/}
+                                                {/*    <div className="info-card-title">*/}
+                                                {/*        <h6>Myself Summary</h6>*/}
+                                                {/*    </div>*/}
+                                                {/*    <div className="info-card-content">*/}
+                                                {/*        <p>Collaboratively innovate compelling mindshare after*/}
+                                                {/*            prospective partnerships Competently sereiz long-term*/}
+                                                {/*            high-impact internal or "organic" sources via user friendly*/}
+                                                {/*            strategic themesr areas creat Dramatically coordinate*/}
+                                                {/*            premium partnerships rather than standards compliant*/}
+                                                {/*            technologies ernd Dramatically matrix ethical collaboration*/}
+                                                {/*            and idea-sharing through opensource methodologies and*/}
+                                                {/*            Intrinsicly grow collaborative platforms vis-a-vis effective*/}
+                                                {/*            scenarios. Energistically strategize cost effective ideas*/}
+                                                {/*            before the worke unde.</p>*/}
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
+                                                {/*<div className="info-card mb-20">*/}
+                                                {/*    <div className="info-card-title">*/}
+                                                {/*        <h6>Looking For</h6>*/}
+                                                {/*    </div>*/}
+                                                {/*    <div className="info-card-content">*/}
+                                                {/*        <ul className="info-list">*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Things I'm looking for</p>*/}
+                                                {/*                <p className="info-details">I want a funny person</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Whatever I like</p>*/}
+                                                {/*                <p className="info-details">I like to travel a lot</p>*/}
+                                                {/*            </li>*/}
+                                                {/*        </ul>*/}
 
-                                                    </div>
-                                                </div>
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Lifestyle</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Interest</p>
-                                                                <p className="info-details">Dogs,Cats</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Favorite vocations spot</p>
-                                                                <p className="info-details">Maldives, Bangladesh</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Looking for</p>
-                                                                <p className="info-details">Serious Relationshiop,Affair</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Smoking</p>
-                                                                <p className="info-details">Casual Smoker</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Language</p>
-                                                                <p className="info-details">English, French, Italian</p>
-                                                            </li>
-                                                        </ul>
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
+                                                {/*<div className="info-card mb-20">*/}
+                                                {/*    <div className="info-card-title">*/}
+                                                {/*        <h6>Lifestyle</h6>*/}
+                                                {/*    </div>*/}
+                                                {/*    <div className="info-card-content">*/}
+                                                {/*        <ul className="info-list">*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Interest</p>*/}
+                                                {/*                <p className="info-details">Dogs,Cats</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Favorite vocations spot</p>*/}
+                                                {/*                <p className="info-details">Maldives, Bangladesh</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Looking for</p>*/}
+                                                {/*                <p className="info-details">Serious Relationshiop,Affair</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Smoking</p>*/}
+                                                {/*                <p className="info-details">Casual Smoker</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Language</p>*/}
+                                                {/*                <p className="info-details">English, French, Italian</p>*/}
+                                                {/*            </li>*/}
+                                                {/*        </ul>*/}
 
-                                                    </div>
-                                                </div>
-                                                <div className="info-card">
-                                                    <div className="info-card-title">
-                                                        <h6>Physical info</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Height</p>
-                                                                <p className="info-details">5'8 ft</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Weight</p>
-                                                                <p className="info-details">72 kg</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Hair Color</p>
-                                                                <p className="info-details">Black</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Eye Color</p>
-                                                                <p className="info-details">Brown</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Body Type</p>
-                                                                <p className="info-details">Tall</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Ethnicity</p>
-                                                                <p className="info-details">Middle Eastern</p>
-                                                            </li>
-                                                        </ul>
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
+                                                {/*<div className="info-card">*/}
+                                                {/*    <div className="info-card-title">*/}
+                                                {/*        <h6>Physical info</h6>*/}
+                                                {/*    </div>*/}
+                                                {/*    <div className="info-card-content">*/}
+                                                {/*        <ul className="info-list">*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Height</p>*/}
+                                                {/*                <p className="info-details">5'8 ft</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Weight</p>*/}
+                                                {/*                <p className="info-details">72 kg</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Hair Color</p>*/}
+                                                {/*                <p className="info-details">Black</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Eye Color</p>*/}
+                                                {/*                <p className="info-details">Brown</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Body Type</p>*/}
+                                                {/*                <p className="info-details">Tall</p>*/}
+                                                {/*            </li>*/}
+                                                {/*            <li>*/}
+                                                {/*                <p className="info-name">Ethnicity</p>*/}
+                                                {/*                <p className="info-details">Middle Eastern</p>*/}
+                                                {/*            </li>*/}
+                                                {/*        </ul>*/}
 
-                                                    </div>
-                                                </div>
+                                                {/*    </div>*/}
+                                                {/*</div>*/}
                                             </article>
                                         </div>
 

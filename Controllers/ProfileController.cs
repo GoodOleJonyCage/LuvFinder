@@ -94,7 +94,11 @@ namespace LuvFinder.Controllers
 
             List<ProfileQuestion> lstProfileQuestions = GetProfileQuestions();
             List<UserProfileQuestion> lstUserProfile = GetUserProfileQuestions(userID);
-
+            if(lstUserProfile.Count == 0) //profile not created
+            {
+                return BadRequest("User profile not found");
+            }
+            
             lstProfileQuestions.ForEach(question =>
             {
                 question.AnswerText = lstUserProfile?
@@ -113,6 +117,7 @@ namespace LuvFinder.Controllers
                                             .SingleOrDefault()?.Selected ?? false;
                 });
             });
+           
             return Ok(lstProfileQuestions);
         }
 
@@ -178,15 +183,25 @@ namespace LuvFinder.Controllers
                     GenderID = info.GenderId ?? 0,
                     MaritalStatusID = info.MaritalStatusId ?? 0,
                     UserID = info.UserId ?? 0,
+                    Age = 42,
                     DOB = info.Dob ?? DateTime.MinValue,
                     SeekingGenderID = info.SeekingGenderId ?? 0,
                     CountryID = info.CountryId,
-                    CountryName = "Pakistan",
                     CityID = info.CityId,
                     RegionID = info.RegionId,
-                    
                 }).SingleOrDefault();
 
+            if (userinfo != null)
+            {
+                userinfo.Gender = db.UserGenders.Where(g => g.Id == userinfo.GenderID).SingleOrDefault()?.Gender ?? string.Empty;
+                userinfo.MaritalStatus = db.UserMaritalStatuses?.Where(s => s.Id == userinfo.MaritalStatusID).SingleOrDefault()?.Status ?? string.Empty;
+                userinfo.SeekingGender = db.UserGenders?.Where(g => g.Id == userinfo.SeekingGenderID).SingleOrDefault()?.Gender ?? string.Empty;
+                userinfo.CountryName = db.Countries?.Where(c => c.Id == userinfo.CountryID).SingleOrDefault()?.Name ?? string.Empty;
+                userinfo.RegionName = db.Regions?.Where(c => c.Id == userinfo.RegionID).SingleOrDefault()?.Name ?? string.Empty;
+                userinfo.CityName = db.Cities?.Where(c => c.Id == userinfo.CityID).SingleOrDefault()?.Name ?? string.Empty;
+            }
+            else
+                return BadRequest("User profile not found");
 
             return Ok(userinfo);
         }
