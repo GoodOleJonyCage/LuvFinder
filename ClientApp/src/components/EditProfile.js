@@ -113,7 +113,6 @@ export const EditProfile = () => {
 
             let vminfo = await LoadUserInfo(getUsername())
             setinfo(vminfo);
-           
             
             let statuses = await LoadMaritalStatuses();
             setmaritalstatuses(statuses);
@@ -1727,13 +1726,13 @@ export const EditProfile = () => {
                                                                     <p className="info-name">Address</p>
                                                                 <div className="info-details">
                                                                     <div className="mb-3 region-container">
-                                                                        <div>Country</div>
+                                                                        <div className="first-div">Country</div>
                                                                         <div>
                                                                           {countries.length === 0 ? <LoadingDiv></LoadingDiv> :
                                                                                 <Autocomplete
                                                                                     disablePortal
                                                                                     id="autocom-countries"
-                                                                                    value={getSelectedCountry()}
+                                                                                    defaultValue={getSelectedCountry()}
                                                                                     onChange={(event, value) => {
                                                                                         info.countryID = value.id;
                                                                                         info.countryName = value.name;
@@ -1749,13 +1748,13 @@ export const EditProfile = () => {
                                                                         </div>
                                                                     </div>
                                                                     <div className="mb-3 region-container">
-                                                                        <div>Region</div>
+                                                                        <div className="first-div">Region</div>
                                                                         <div>
-                                                                            {regions.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                                            {regions.length === 0 ? <div className="highlight-error">Select Country</div> :
                                                                                 <Autocomplete
                                                                                     disablePortal
                                                                                     id="autocom-region"
-                                                                                    value={getSelectedRegion()}
+                                                                                    defaultValue={getSelectedRegion()}
                                                                                     onChange={(event, value) => {
                                                                                         if (value) {
                                                                                             info.regionID = value.id;
@@ -1772,17 +1771,18 @@ export const EditProfile = () => {
                                                                         </div>
                                                                     </div>
                                                                     <div className="mb-3 region-container">
-                                                                        <div>City</div>
+                                                                        <div className="first-div">City</div>
                                                                         <div>
-                                                                            {cities.length === 0 ? <LoadingDiv></LoadingDiv> :
+                                                                            {cities.length === 0 ? <div className="highlight-error">Select Region</div> :
                                                                                 <Autocomplete
                                                                                     disablePortal
                                                                                     onChange={(event, value) => {
                                                                                         info.cityID = value.id;
                                                                                         info.cityName = value.name;
+                                                                                        console.log(info);
                                                                                     }}
                                                                                     id="autocom-cities"
-                                                                                    value={getSelectedCity()}
+                                                                                    defaultValue={getSelectedCity()}
                                                                                     options={cities}
                                                                                     getOptionLabel={(option) => option.name || ""}
                                                                                     sx={{ width: 300 }}
@@ -1849,106 +1849,6 @@ export const EditProfile = () => {
                                                             </div>
                                                         })
                                                 }
-                                                
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Myself Summary</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <p>Collaboratively innovate compelling mindshare after
-                                                            prospective partnerships Competently sereiz long-term
-                                                            high-impact internal or "organic" sources via user friendly
-                                                            strategic themesr areas creat Dramatically coordinate
-                                                            premium partnerships rather than standards compliant
-                                                            technologies ernd Dramatically matrix ethical collaboration
-                                                            and idea-sharing through opensource methodologies and
-                                                            Intrinsicly grow collaborative platforms vis-a-vis effective
-                                                            scenarios. Energistically strategize cost effective ideas
-                                                            before the worke unde.</p>
-                                                    </div>
-                                                </div>
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Looking For</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Things I'm looking for</p>
-                                                                <p className="info-details">I want a funny person</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Whatever I like</p>
-                                                                <p className="info-details">I like to travel a lot</p>
-                                                            </li>
-                                                        </ul>
-
-                                                    </div>
-                                                </div>
-                                                <div className="info-card mb-20">
-                                                    <div className="info-card-title">
-                                                        <h6>Lifestyle</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Interest</p>
-                                                                <p className="info-details">Dogs,Cats</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Favorite vocations spot</p>
-                                                                <p className="info-details">Maldives, Bangladesh</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Looking for</p>
-                                                                <p className="info-details">Serious Relationshiop,Affair</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Smoking</p>
-                                                                <p className="info-details">Casual Smoker</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Language</p>
-                                                                <p className="info-details">English, French, Italian</p>
-                                                            </li>
-                                                        </ul>
-
-                                                    </div>
-                                                </div>
-                                                <div className="info-card">
-                                                    <div className="info-card-title">
-                                                        <h6>Physical info</h6>
-                                                    </div>
-                                                    <div className="info-card-content">
-                                                        <ul className="info-list">
-                                                            <li>
-                                                                <p className="info-name">Height</p>
-                                                                <p className="info-details">5'8 ft</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Weight</p>
-                                                                <p className="info-details">72 kg</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Hair Color</p>
-                                                                <p className="info-details">Black</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Eye Color</p>
-                                                                <p className="info-details">Brown</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Body Type</p>
-                                                                <p className="info-details">Tall</p>
-                                                            </li>
-                                                            <li>
-                                                                <p className="info-name">Ethnicity</p>
-                                                                <p className="info-details">Middle Eastern</p>
-                                                            </li>
-                                                        </ul>
-
-                                                    </div>
-                                                </div>
                                             </article>
                                             <div className="container">
                                                 <div className="m-auto">

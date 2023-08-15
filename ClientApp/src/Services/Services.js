@@ -178,9 +178,33 @@ export const LoadUserInfo = async (username) => {
 
 }
 
+
+export const LoadInitializedUserInfo = async () => {
+
+    let response = await fetch(`profile/initializeduserinfo`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        //method: 'POST',
+        //body: JSON.stringify({ username: username }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+
+}
+
+
+
 export const SaveProfile = async (username, vm, info) => {
 
-    let response = await fetch(`profile/profilesaved`, {
+    let response = await fetch(`profile/saveprofile`, {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

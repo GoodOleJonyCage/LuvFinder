@@ -2,6 +2,7 @@
 using LuvFinder.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using NuGet.Packaging.Signing;
 using System.Collections.Generic;
@@ -156,8 +157,6 @@ namespace LuvFinder.Controllers
         public ActionResult Cities([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
         {
             var regionid = Int32.Parse(userParams.GetProperty("regionid").ToString());
-            //var lstRegions = db.Regions.Where(r => r.CountryId == countryid).ToList();
-            //var region = lstRegions.Where(r => r.Id == regionid).SingleOrDefault();
             var lst = db.Cities.Where(c => c.RegionId == regionid)
                         .Select(c => new ViewModels.City()
                         { 
@@ -206,8 +205,16 @@ namespace LuvFinder.Controllers
             return Ok(userinfo);
         }
 
+        [HttpGet]
+        [Route("initializeduserinfo")]
+        public ActionResult InitializedUserInfo()
+        {
+            //return an initialized object to instantiate the vm
+            return Ok(new ViewModels.UserInfo());
+        }
+
         [HttpPost]
-        [Route("profilesaved")]
+        [Route("saveprofile")]
         public ActionResult SaveProfile([FromBody] System.Text.Json.JsonElement param)
         {
             var username = param.GetProperty("username").ToString();
@@ -220,28 +227,63 @@ namespace LuvFinder.Controllers
             if (userID == 0 )
                 return BadRequest("User Not found");
 
+            if (string.IsNullOrEmpty(vminfo?.FirstName))
+            {
+                lstErrors.Add($"First name required");
+            }
+            if (string.IsNullOrEmpty(vminfo?.LastName))
+            {
+                lstErrors.Add($"Last name required");
+            }
+            if (vminfo?.GenderID == 0)
+            {
+                lstErrors.Add($"Gender required");
+            }
+            if (vminfo?.SeekingGenderID == 0)
+            {
+                lstErrors.Add($"Seeking Gender required");
+            }
+            if (vminfo?.MaritalStatusID == 0)
+            {
+                lstErrors.Add($"Marital Status required");
+            }
+            if (vminfo?.CountryID == 0)
+            {
+                lstErrors.Add($"Country required");
+            }
+            if (vminfo?.RegionID == 0)
+            {
+                lstErrors.Add($"Region required");
+            }
+            if (vminfo?.CityID == 0)
+            {
+                lstErrors.Add($"City required");
+            }
+
+            if (lstErrors.Count > 0)
+            {
+                return BadRequest(lstErrors);
+            }
+
             try
             {
-                if (vminfo != null)
-                {
-                    var infotodelete = db.UserInfos.Where(u => u.UserId == userID).SingleOrDefault();
-                    if (infotodelete != null)
-                        db.UserInfos.Remove(infotodelete);
+                var infotodelete = db.UserInfos.Where(u => u.UserId == userID).SingleOrDefault();
+                if (infotodelete != null)
+                    db.UserInfos.Remove(infotodelete);
 
-                    db.UserInfos.Add(new Models.UserInfo()
-                    {
-                        FirstName = vminfo.FirstName,
-                        LastName = vminfo.LastName,
-                        CityId = vminfo.CityID,
-                        CountryId = short.Parse(vminfo.CountryID.ToString()),
-                        RegionId = vminfo.RegionID,
-                        Dob = DateTime.Now,
-                        GenderId = vminfo.GenderID,
-                        SeekingGenderId = vminfo.SeekingGenderID,
-                        MaritalStatusId = vminfo.MaritalStatusID,
-                        UserId = userID
-                    });
-                }
+                db.UserInfos.Add(new Models.UserInfo()
+                {
+                    FirstName = vminfo.FirstName,
+                    LastName = vminfo.LastName,
+                    CityId = vminfo.CityID,
+                    CountryId = short.Parse(vminfo.CountryID.ToString()),
+                    RegionId = vminfo.RegionID,
+                    Dob = DateTime.Now,
+                    GenderId = vminfo.GenderID,
+                    SeekingGenderId = vminfo.SeekingGenderID,
+                    MaritalStatusId = vminfo.MaritalStatusID,
+                    UserId = userID
+                });
             }
             catch (Exception exc)
             {
