@@ -386,11 +386,36 @@ namespace LuvFinder.Controllers
         [Route("profiles")]
         public ActionResult GetProfiles()
         {
-            var lst = db.Users.Select(x => x.Username).ToList();
-            lst.AddRange(db.Users.Select(x => x.Username).ToList());
-            lst.AddRange(db.Users.Select(x => x.Username).ToList());
-            return Ok(lst);
+            //var lst = db.Users.Select(x => x.Username).ToList();
+            //lst.AddRange(db.Users.Select(x => x.Username).ToList());
+            //lst.AddRange(db.Users.Select(x => x.Username).ToList());
+            var lst =(from u in db.Users join i in db.UserInfos on u.Id equals i.UserId
+            select new ViewModels.UserInfo()
+            {
+                UserName = u.Username,
+                LastName = i.LastName ?? string.Empty,
+                FirstName = i.FirstName ?? string.Empty,
+                GenderID = i.GenderId ?? 0,
+                SeekingGenderID = i.SeekingGenderId ?? 0,
+                MaritalStatusID = i.MaritalStatusId ?? 0,
+                CountryID = i.CountryId,
+                CityID = i.CityId,
+                RegionID = i.RegionId,
+                DOB = i.Dob??DateTime.MinValue,
+            }).ToList();
 
+            lst.ForEach(entry =>
+            {
+                entry.Age = entry.DOB != DateTime.MinValue ? (DateTime.Now - entry.DOB).Days : 0;
+                entry.Gender = db.UserGenders.Where(g => g.Id == entry.GenderID)?.SingleOrDefault()?.Gender ?? string.Empty;
+                entry.SeekingGender = db.UserGenders.Where(g => g.Id == entry.SeekingGenderID).SingleOrDefault()?.Gender ?? string.Empty;
+                entry.MaritalStatus = db.UserMaritalStatuses.Where(m => m.Id == entry.MaritalStatusID).SingleOrDefault()?.Status ?? string.Empty;
+                entry.CountryName = db.Countries.Where(c => c.Id == entry.CountryID).SingleOrDefault()?.Name ?? string.Empty;
+                entry.CityName = db.Cities.Where(c => c.Id == entry.CityID).SingleOrDefault()?.Name ?? string.Empty;
+                entry.RegionName = db.Regions.Where(r => r.Id == entry.RegionID).SingleOrDefault()?.Name ?? string.Empty;
+            });
+            
+            return Ok(lst);
         }
     }
 }

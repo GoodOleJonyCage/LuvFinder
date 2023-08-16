@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react'
 import {LoadProfiles } from '../Services/Services'
-import { NavLink } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { LoadingDiv } from './LoadingDiv'
+
 export const ProfileList = () => {
 
     const [profiles, setprofiles] = useState([]);
@@ -25,10 +25,11 @@ export const ProfileList = () => {
 
     return <div className="row justify-content-center g-3 g-md-4">
             {
+            profiles.length === 0 ? <LoadingDiv></LoadingDiv> :
             profiles.map((profile, index) => {
                 return <div key={index} className="col-xl-2 col-lg-3 col-md-4 col-6"
                         onClick={(e) =>
-                            navigate('/viewprofile', { state: { username: profile } })}>
+                            navigate('/viewprofile', { state: { username: profile.userName } })}>
                     <div className="lab-item member-item style-1">
                         <div className="lab-inner">
                             <div className="lab-thumb">
@@ -36,8 +37,10 @@ export const ProfileList = () => {
                                 <img src={`assets/images/member/${(index % 21 < 9 ? "0" + ((index + 1) % 21) : ((index + 1) % 21) === 0 ? "01" : (index + 1) % 21)}.jpg`} alt="member-img" />
                             </div>
                             <div className="lab-content">
-                                <h6><a href="profile.html">{profile}</a> </h6>
-                                <p>Active 1 Day</p>
+                                <h6>{profile.firstName + " " + profile.lastName}</h6>
+                                <div>{profile.maritalStatus} {profile.gender} looking for a {profile.seekingGender}</div>
+                                <p>{profile.age} days old</p>
+                                <p>{profile.cityName},{profile.regionName } {profile.countryName }</p>
                             </div>
                         </div>
                     </div>

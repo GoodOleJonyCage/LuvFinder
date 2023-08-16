@@ -3,21 +3,28 @@ import { LoadingDiv } from './LoadingDiv'
 import { LoadUserProfile, LoadUserInfo } from '../Services/Services'
 /*import { UserStore } from './UserStore'*/
 import { useLocation } from 'react-router-dom';
+import { CompleteProfileOption } from './CompleteProfileOption'
 
 export const Profile = () => {
 
+    //basic info
     const [info, setinfo] = useState({});
     const [infoerror, setinfoerror] = useState('');
     const [infoloaded, setinfoloaded] = useState(false);
-    
+    //basic info
+
+    //profile questions
     const [questions, setquestions] = useState([]);
     const [questionserror, setquestionserror] = useState('');
     const [questionsloaded, setquestionsloaded] = useState(false);
+    //profile questions
 
+    //get username from path
     const location = useLocation();
     let { username } = location.state;
-    
-    const LoadData = async () => {
+    //get username from path
+
+    const loadData = async () => {
 
         try {
             let vminfo = await LoadUserInfo(username)
@@ -43,8 +50,124 @@ export const Profile = () => {
         }
     }
     useEffect(() => {
-        LoadData();
+        loadData();
     }, []);
+
+    //components
+    const BasicInfo = () => {
+        return <>
+            {
+                !infoloaded && infoerror.length === 0 ? <LoadingDiv></LoadingDiv> :
+                    infoerror.length > 0 ?
+                        <CompleteProfileOption infoerror={infoerror}></CompleteProfileOption> :
+                        <div className="info-card mb-20">
+                            <div className="info-card-title">
+                                <h6>Base Info</h6>
+                            </div>
+                            <div className="info-card-content profile-form">
+                                <ul className="info-list">
+                                    <li>
+                                        <p className="info-name">First Name</p>
+                                        <p className="info-details">
+                                            <label>{info.firstName}</label>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">Last Name</p>
+                                        <p className="info-details">
+                                            <label>{info.lastName}</label>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">I'm a</p>
+                                        <p className="info-details">
+                                            <label>{info.gender}</label>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">Loking for a</p>
+                                        <p className="info-details">
+                                            <label>{info.seekingGender}</label>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">Marital Status</p>
+                                        <p className="info-details">
+                                            <label>{info.maritalStatus}</label>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">Age</p>
+                                        <p className="info-details">
+                                            <label>{info.age}</label>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">Date of Birth</p>
+                                        <label>{info.dob}</label>
+                                    </li>
+                                    <li>
+                                        <p className="info-name">Address</p>
+                                        <div className="info-details">
+                                            <div className="mb-3 region-container-viewmode">
+                                                <div>Country</div>
+                                                <label>{info.countryName}</label>
+                                            </div>
+                                            <div className="mb-3 region-container-viewmode">
+                                                <div>Region</div>
+                                                <label>{info.regionName}</label>
+                                            </div>
+                                            <div className="mb-3 region-container-viewmode">
+                                                <div>City</div>
+                                                <label>{info.cityName}</label>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+            }
+        </>
+    }
+    const ProfileQuestions = () => {
+        return <>
+            {
+                !questionsloaded && questionserror.length === 0 ? <LoadingDiv></LoadingDiv> :
+                    questionserror.length > 0 ? <></> :
+                        questions.map((q, index) => {
+                            return <div className="info-card mb-20" key={index}>
+                                <div className="info-card-title">
+                                    <h6>{q.question.shortDesc}</h6>
+                                </div>
+                                <div className="info-card-content">
+                                    {
+                                        q.question.answers.length === 0 ?
+                                            <>
+                                                <div className="mb-3">{q.question.text}</div>
+                                                <p className="question-para">{q.answerText}</p>
+                                            </> :
+                                            <ul className="info-list">
+                                                <li>
+                                                    <p className="info-name">{q.question.text}</p>
+                                                    <div className="info-details">
+                                                        {
+                                                            q.question.answers.map((a, aindex) => {
+                                                                return <ul key={aindex} className="questionnaire_Control_container">
+                                                                    <li className={a.selected ? "checkmark" : "nocheckmark"}>{a.text}</li>
+                                                                </ul>
+                                                            })
+                                                        }
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                    }
+                                </div>
+                            </div>
+                        })
+
+            }
+        </>
+    }
 
     return <section className="profile-section padding-tb">
         <div className="container">
@@ -1554,109 +1677,8 @@ export const Profile = () => {
                                     <div className="row">
                                         <div className="col-xl-8">
                                             <article>
-                                                {!infoloaded && infoerror.length === 0 ? <LoadingDiv></LoadingDiv> :
-                                                    infoerror.length > 0 ? <div className="highlight-error text-center">{infoerror}</div> :
-                                                    <div className="info-card mb-20">
-                                                            <div className="info-card-title">
-                                                                <h6>Base Info</h6>
-                                                            </div>
-                                                            <div className="info-card-content profile-form">
-                                                                <ul className="info-list">
-                                                                    <li>
-                                                                        <p className="info-name">First Name</p>
-                                                                        <p className="info-details">
-                                                                            <label>{info.firstName}</label>
-                                                                        </p>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">Last Name</p>
-                                                                        <p className="info-details">
-                                                                            <label>{info.lastName}</label>
-                                                                        </p>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">I'm a</p>
-                                                                        <p className="info-details">
-                                                                            <label>{info.gender}</label>
-                                                                        </p>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">Loking for a</p>
-                                                                        <p className="info-details">
-                                                                            <label>{info.seekingGender}</label>
-                                                                        </p>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">Marital Status</p>
-                                                                        <p className="info-details">
-                                                                            <label>{info.maritalStatus}</label>
-                                                                        </p>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">Age</p>
-                                                                        <p className="info-details">
-                                                                            <label>{info.age}</label>
-                                                                        </p>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">Date of Birth</p>
-                                                                        <label>{info.dob}</label>
-                                                                    </li>
-                                                                    <li>
-                                                                        <p className="info-name">Address</p>
-                                                                        <div className="info-details">
-                                                                            <div className="mb-3 region-container-viewmode">
-                                                                                <div>Country</div>
-                                                                                <label>{info.countryName}</label>
-                                                                            </div>
-                                                                            <div className="mb-3 region-container-viewmode">
-                                                                                <div>Region</div>
-                                                                                <label>{info.regionName}</label>
-                                                                            </div>
-                                                                            <div className="mb-3 region-container-viewmode">
-                                                                                <div>City</div>
-                                                                                <label>{info.cityName}</label>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                }
-                                                {
-                                                    !questionsloaded && questionserror.length === 0 ? <LoadingDiv></LoadingDiv> :
-                                                        questionserror.length > 0 ? <div className="highlight-error text-center">{questionserror}</div> :
-                                                        questions.map((q, index) => {
-                                                            return <div className="info-card mb-20" key={index}>
-                                                                <div className="info-card-title">
-                                                                    <h6>{q.question.shortDesc}</h6>
-                                                                </div>
-                                                                <div className="info-card-content">
-                                                                    {
-                                                                        q.question.answers.length === 0 ?
-                                                                            <>
-                                                                                <div className="mb-3">{q.question.text}</div>
-                                                                                <p className="question-para">{q.answerText}</p>
-                                                                            </> :
-                                                                            <ul className="info-list">
-                                                                                <li>
-                                                                                    <p className="info-name">{q.question.text}</p>
-                                                                                    <div className="info-details">
-                                                                                        {
-                                                                                            q.question.answers.map((a, aindex) => {
-                                                                                                return <ul key={aindex} className="questionnaire_Control_container">
-                                                                                                    <li className={a.selected ? "checkmark" : "nocheckmark"}>{a.text}</li>
-                                                                                                </ul>
-                                                                                            })
-                                                                                        }
-                                                                                    </div>
-                                                                                </li>
-                                                                            </ul>
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        })
-                                                }
+                                                <BasicInfo></BasicInfo>
+                                                <ProfileQuestions></ProfileQuestions>
                                                 {/*<div className="info-card mb-20">*/}
                                                 {/*    <div className="info-card-title">*/}
                                                 {/*        <h6>Base Info</h6>*/}

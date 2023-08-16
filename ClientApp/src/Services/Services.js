@@ -178,7 +178,6 @@ export const LoadUserInfo = async (username) => {
 
 }
 
-
 export const LoadInitializedUserInfo = async () => {
 
     let response = await fetch(`profile/initializeduserinfo`, {
@@ -199,8 +198,6 @@ export const LoadInitializedUserInfo = async () => {
     throw response;
 
 }
-
-
 
 export const SaveProfile = async (username, vm, info) => {
 

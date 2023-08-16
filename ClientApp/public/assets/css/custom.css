@@ -186,6 +186,12 @@ ul li.nocheckmark:before {
     margin-left: 20px;
 }
 
+
+.MuiAutocomplete-popupIndicator svg,
+.MuiAutocomplete-clearIndicator svg {
+    color: white;
+}
+
 /*mui autocomplete*/
 
     .profile-form input[type="text"],
@@ -221,3 +227,4 @@ ul li.nocheckmark:before {
 .lab-item  {
     cursor:pointer !important;
 }
+
