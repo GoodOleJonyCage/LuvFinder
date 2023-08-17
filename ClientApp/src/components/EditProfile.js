@@ -4,6 +4,7 @@ import { LoadUserProfile, SaveProfile, LoadUserInfo, LoadCountries, LoadRegions,
 import { UserStore } from './UserStore'
 import { useNavigate } from "react-router-dom"
 import { Autocomplete, TextField } from '@mui/material';
+import Calendar from 'react-calendar';
 
 export const EditProfile = () => {
 
@@ -80,13 +81,13 @@ export const EditProfile = () => {
     const loadCountryList = async () => {
         let countrylist = await LoadCountries();
         setcountries(countrylist);
-        setregions([]);
-        setcities([]);
+        //setregions([]);
+        //setcities([]);
     }
     const loadRegionsList = async (countryid) => {
         let regionList = await LoadRegions(countryid);
         setregions(regionList);
-        setcities([]);
+        //setcities([]);
     }
     const loadCitiesList = async (regionid) => {
         let cityList = await LoadCities(regionid);
@@ -104,7 +105,6 @@ export const EditProfile = () => {
     const getSelectedRegion = () => {
         const item = regions.find((opt) => {
             if (opt.id === info.regionID) {
-
                 return opt;
             }
         })
@@ -134,7 +134,7 @@ export const EditProfile = () => {
 
             let genderlist = await LoadGenders();
             setgenders(genderlist);
-
+            
             /*load countries, city and regions  */
             loadCountryList();
             if (vminfo.countryID > 0)
@@ -183,7 +183,7 @@ export const EditProfile = () => {
                         <li>
                             <p className="info-name">I'm a</p>
                             <p className="info-details">
-                                <select id="user-gender" value={info.genderID}
+                                <select id="user-gender" defaultValue={info.genderID}
                                     onChange={(e) => { info.genderID = e.target.value; }}>
                                     {
                                         genders.map((gender, index) => {
@@ -196,7 +196,7 @@ export const EditProfile = () => {
                         <li>
                             <p className="info-name">Loking for a</p>
                             <p className="info-details">
-                                <select id="user-gender" value={info.seekingGenderID}
+                                <select id="user-gender" defaultValue={info.seekingGenderID}
                                     onChange={(e) => { info.seekingGenderID = e.target.value; }}>
                                     {
                                         genders.map((gender, index) => {
@@ -210,7 +210,7 @@ export const EditProfile = () => {
                             <p className="info-name">Marital Status</p>
                             <p className="info-details">
                                 <select id="user-maritalstatus"
-                                    value={info.maritalStatusID}
+                                    defaultValue={info.maritalStatusID}
                                     onChange={(e) => { info.maritalStatusID = e.target.value; }} >
                                     {
                                         maritalstatuses.map((status, index) => {
@@ -221,16 +221,10 @@ export const EditProfile = () => {
                             </p>
                         </li>
                         <li>
-                            <p className="info-name">Age</p>
-                            <p className="info-details">
-                                <input
-                                    onChange={(e) => { info.dob = e.target.value }}
-                                    type="text" defaultValue={info.dob} />
-                            </p>
-                        </li>
-                        <li>
                             <p className="info-name">Date of Birth</p>
-                            <p className="info-details">27-02-1996</p>
+                            <div className="info-details">
+                                <Calendar onChange={(e) => { info.dob = e.toJSON().slice(0, 10).replace(/-/g, '/'); }} defaultValue={info.dob} />
+                            </div>
                         </li>
                         <li>
                             <p className="info-name">Address</p>
@@ -244,9 +238,15 @@ export const EditProfile = () => {
                                                 id="autocom-countries"
                                                 defaultValue={getSelectedCountry()}
                                                 onChange={(event, value) => {
-                                                    info.countryID = value.id;
-                                                    info.countryName = value.name;
-                                                    loadRegionsList(info.countryID);
+                                                    if (value) {
+                                                        info.countryID = value.id;
+                                                        info.countryName = value.name;
+                                                        loadRegionsList(info.countryID);
+                                                    }
+                                                    else {
+                                                        info.countryID = 0;
+                                                        info.countryName = '';
+                                                    }
                                                 }}
 
                                                 options={countries}
@@ -270,7 +270,11 @@ export const EditProfile = () => {
                                                         info.regionID = value.id;
                                                         info.regionName = value.name;
                                                         loadCitiesList(info.regionID);
+                                                    } else {
+                                                        info.regionID = 0;
+                                                        info.regionName = '';
                                                     }
+
                                                 }}
                                                 options={regions}
                                                 getOptionLabel={(option) => option.name || ""}
@@ -286,13 +290,18 @@ export const EditProfile = () => {
                                         {cities.length === 0 ? <div className="highlight-error">Select Region</div> :
                                             <Autocomplete
                                                 disablePortal
-                                                onChange={(event, value) => {
-                                                    info.cityID = value.id;
-                                                    info.cityName = value.name;
-
-                                                }}
                                                 id="autocom-cities"
                                                 defaultValue={getSelectedCity()}
+                                                onChange={(event, value) => {
+                                                    if (value) {
+                                                        info.cityID = value.id;
+                                                        info.cityName = value.name;
+                                                    }
+                                                    else {
+                                                        info.cityID = 0;
+                                                        info.cityName = '';
+                                                    }
+                                                }}
                                                 options={cities}
                                                 getOptionLabel={(option) => option.name || ""}
                                                 sx={{ width: 300 }}

@@ -235,6 +235,11 @@ namespace LuvFinder.Controllers
             {
                 lstErrors.Add($"Last name required");
             }
+            if (!vminfo.DOB.HasValue)
+            {
+                lstErrors.Add($"Date of birth required");
+            }
+            
             if (vminfo?.GenderID == 0)
             {
                 lstErrors.Add($"Gender required");
@@ -273,15 +278,15 @@ namespace LuvFinder.Controllers
 
                 db.UserInfos.Add(new Models.UserInfo()
                 {
-                    FirstName = vminfo.FirstName,
-                    LastName = vminfo.LastName,
-                    CityId = vminfo.CityID,
-                    CountryId = short.Parse(vminfo.CountryID.ToString()),
-                    RegionId = vminfo.RegionID,
-                    Dob = DateTime.Now,
-                    GenderId = vminfo.GenderID,
-                    SeekingGenderId = vminfo.SeekingGenderID,
-                    MaritalStatusId = vminfo.MaritalStatusID,
+                    FirstName = vminfo?.FirstName,
+                    LastName = vminfo?.LastName,
+                    CityId = vminfo?.CityID??0,
+                    CountryId = short.Parse((vminfo?.CountryID??0).ToString()),
+                    RegionId = vminfo?.RegionID??0,
+                    Dob = vminfo?.DOB,
+                    GenderId = vminfo?.GenderID,
+                    SeekingGenderId = vminfo?.SeekingGenderID,
+                    MaritalStatusId = vminfo?.MaritalStatusID,
                     UserId = userID
                 });
             }
@@ -403,7 +408,7 @@ namespace LuvFinder.Controllers
 
             lst.ForEach(entry =>
             {
-                entry.Age = entry.DOB != DateTime.MinValue ? (DateTime.Now - entry.DOB).Days : 0;
+                entry.Age = entry.DOB.HasValue ? CalculateAge(entry.DOB.Value) : 0;
                 entry.Gender = db.UserGenders.Where(g => g.Id == entry.GenderID)?.SingleOrDefault()?.Gender ?? string.Empty;
                 entry.SeekingGender = db.UserGenders.Where(g => g.Id == entry.SeekingGenderID).SingleOrDefault()?.Gender ?? string.Empty;
                 entry.MaritalStatus = db.UserMaritalStatuses.Where(m => m.Id == entry.MaritalStatusID).SingleOrDefault()?.Status ?? string.Empty;
@@ -412,10 +417,20 @@ namespace LuvFinder.Controllers
                 entry.RegionName = db.Regions.Where(r => r.Id == entry.RegionID).SingleOrDefault()?.Name ?? string.Empty;
             });
 
-            //lst.AddRange(lst);
-            //lst.AddRange(lst);
-            //lst.AddRange(lst);
+            
             return Ok(lst);
+        }
+
+        private int CalculateAge(DateTime birthdate)
+        {
+            // Save today's date.
+            var today = DateTime.Today;
+            // Calculate the age.
+            var age = today.Year - birthdate.Year;
+            // Go back to the year in which the person was born in case of a leap year
+            if (birthdate.Date > today.AddYears(-age)) age--;
+            return age;
+
         }
     }
 }

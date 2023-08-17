@@ -203,62 +203,81 @@ ul li.nocheckmark:before {
         width: 180px;
     }
 
-.info-details .region-container {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.info-details .region-container .first-div {
-     flex: 0 0 70px;
-}
 
-.info-details .region-container-viewmode {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.info-details .region-container-viewmode div {
+
+    .info-details .region-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .info-details .region-container .first-div {
         flex: 0 0 70px;
-}
-.info-details .region-container-viewmode label {
-   
-}
+    }
 
-/*Profile list*/
+    .info-details .region-container-viewmode {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
 
-.profile-item-container {
-    cursor: pointer !important;
-}
+        .info-details .region-container-viewmode div {
+            flex: 0 0 70px;
+        }
 
-.profile-item .profile-item-maritalstatus {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    font-size: x-small;
-}
+        .info-details .region-container-viewmode label {
+        }
 
-.profile-item .profile-item-age {
-    font-size: x-small;
-}
+    @media (max-width: 500px) {
+        .info-details .region-container {
+            display: block;
+        }
+    }
 
-.profile-item-maritalstatus-seeking {
-    margin-left: 3px;
-    margin-right:2px;
-}
-.profile-item .profile-item-address {
-    font-style: italic;
-    font-size: small;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.profile-item .profile-item-address div{
-    margin-left:3px;
-}
-.member-item.style-1 .lab-inner .lab-thumb img{
-    transform:none;
-}
-.profile-item div{
-  padding-top:2px;
-}
-/*Profile list*/
+
+    /*Profile list*/
+
+    .profile-item-container {
+        cursor: pointer !important;
+    }
+
+    .profile-item .profile-item-maritalstatus {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-size: x-small;
+    }
+
+    .profile-item .profile-item-age {
+        font-size: x-small;
+    }
+
+    .profile-item-maritalstatus-seeking {
+        margin-left: 3px;
+        margin-right: 2px;
+    }
+
+    .profile-item .profile-item-address {
+        font-style: italic;
+        font-size: small;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+        .profile-item .profile-item-address div {
+            margin-left: 3px;
+        }
+
+    .member-item.style-1 .lab-inner .lab-thumb img {
+        transform: none;
+    }
+
+    .profile-item div {
+        padding-top: 2px;
+    }
+    /*Profile list*/
+
+
+
+    

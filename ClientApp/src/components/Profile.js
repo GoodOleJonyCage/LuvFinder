@@ -103,10 +103,6 @@ export const Profile = () => {
                                         </p>
                                     </li>
                                     <li>
-                                        <p className="info-name">Date of Birth</p>
-                                        <label>{info.dob}</label>
-                                    </li>
-                                    <li>
                                         <p className="info-name">Address</p>
                                         <div className="info-details">
                                             <div className="mb-3 region-container-viewmode">

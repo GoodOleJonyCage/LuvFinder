@@ -40,8 +40,8 @@ namespace LuvFinder.ViewModels
         public int Age {  get; set; }   
         public int UserID { get; set; }
         
-        public DateTime DOB { get; set; }
-        
+        public DateTime? DOB { get; set; }
+
         public int CountryID { get; set; }
         public string CountryName { get; set; } = string.Empty;
 
