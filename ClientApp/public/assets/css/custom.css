@@ -224,7 +224,41 @@ ul li.nocheckmark:before {
    
 }
 
-.lab-item  {
-    cursor:pointer !important;
+/*Profile list*/
+
+.profile-item-container {
+    cursor: pointer !important;
 }
 
+.profile-item .profile-item-maritalstatus {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: x-small;
+}
+
+.profile-item .profile-item-age {
+    font-size: x-small;
+}
+
+.profile-item-maritalstatus-seeking {
+    margin-left: 3px;
+    margin-right:2px;
+}
+.profile-item .profile-item-address {
+    font-style: italic;
+    font-size: small;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.profile-item .profile-item-address div{
+    margin-left:3px;
+}
+.member-item.style-1 .lab-inner .lab-thumb img{
+    transform:none;
+}
+.profile-item div{
+  padding-top:2px;
+}
+/*Profile list*/

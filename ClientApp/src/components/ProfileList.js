@@ -12,7 +12,6 @@ export const ProfileList = () => {
 
         try {
             let vm = await LoadProfiles();
-            console.log(vm);
             setprofiles(vm);
         } catch (e) {
 
@@ -23,30 +22,42 @@ export const ProfileList = () => {
     }, []);
 
 
-    return <div className="row justify-content-center g-3 g-md-4">
-            {
-            profiles.length === 0 ? <LoadingDiv></LoadingDiv> :
-            profiles.map((profile, index) => {
-                return <div key={index} className="col-xl-2 col-lg-3 col-md-4 col-6"
-                        onClick={(e) =>
-                            navigate('/viewprofile', { state: { username: profile.userName } })}>
-                    <div className="lab-item member-item style-1">
+    const Profile = (props) => {
+        return <>
+                <div className="col-xl-2 col-lg-3 col-md-4 col-6"
+                    onClick={(e) => navigate('/viewprofile', { state: { username: props.profile.userName } })}>
+                    <div className="profile-item-container lab-item member-item style-1">
                         <div className="lab-inner">
                             <div className="lab-thumb">
                                 {/*randomly selectying image from 01 to 20 png*/}
-                                <img src={`assets/images/member/${(index % 21 < 9 ? "0" + ((index + 1) % 21) : ((index + 1) % 21) === 0 ? "01" : (index + 1) % 21)}.jpg`} alt="member-img" />
+                                <img src={`assets/images/member/${(props.index % 21 < 9 ? "0" + ((props.index + 1) % 21) : ((props.index + 1) % 21) === 0 ? "01" : (props.index + 1) % 21)}.jpg`} alt="member-img" />
                             </div>
-                            <div className="lab-content">
-                                <h6>{profile.firstName + " " + profile.lastName}</h6>
-                                <div>{profile.maritalStatus} {profile.gender} looking for a {profile.seekingGender}</div>
-                                <p>{profile.age} days old</p>
-                                <p>{profile.cityName},{profile.regionName } {profile.countryName }</p>
+                            <div className="lab-content profile-item">
+                                <h6>{props.profile.firstName + " " + props.profile.lastName}</h6>
+                                <div className="profile-item-maritalstatus">
+                                    <div >{props.profile.maritalStatus} {props.profile.gender} ({props.profile.age})</div>
+                                    <div className="profile-item-maritalstatus-seeking">seeking</div>
+                                    <div>{props.profile.seekingGender}</div>
+                                </div>
+                                <div className="profile-item-address">
+                                    <div>{props.profile.cityName},</div>
+                                    <div>{props.profile.regionName}</div>
+                                    <div>{props.profile.countryName}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            })
-            }
-        </div>;
+            </>
+    }
+
+    return <div className="row justify-content-center g-3 g-md-4">
+        {
+            profiles.length === 0 ? <LoadingDiv></LoadingDiv> :
+                profiles.map((profile, index) => {
+                    return <Profile profile={profile} key={index} index={index}></Profile>
+                })
+        }
+    </div>;
 
 }

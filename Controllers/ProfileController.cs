@@ -386,9 +386,6 @@ namespace LuvFinder.Controllers
         [Route("profiles")]
         public ActionResult GetProfiles()
         {
-            //var lst = db.Users.Select(x => x.Username).ToList();
-            //lst.AddRange(db.Users.Select(x => x.Username).ToList());
-            //lst.AddRange(db.Users.Select(x => x.Username).ToList());
             var lst =(from u in db.Users join i in db.UserInfos on u.Id equals i.UserId
             select new ViewModels.UserInfo()
             {
@@ -414,7 +411,10 @@ namespace LuvFinder.Controllers
                 entry.CityName = db.Cities.Where(c => c.Id == entry.CityID).SingleOrDefault()?.Name ?? string.Empty;
                 entry.RegionName = db.Regions.Where(r => r.Id == entry.RegionID).SingleOrDefault()?.Name ?? string.Empty;
             });
-            
+
+            //lst.AddRange(lst);
+            //lst.AddRange(lst);
+            //lst.AddRange(lst);
             return Ok(lst);
         }
     }
