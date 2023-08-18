@@ -42,8 +42,34 @@ export const UserStore = () => {
         localStorage.setItem("username", null);
     }
 
+    const isLoggedIn = () => {
+
+        return getUsername() !== null;
+
+    }
+
+    const isAdmin = () => {
+
+        let tokenstr = localStorage.getItem('token');
+        if (tokenstr) {
+
+            let jwtData = tokenstr.split('.')[1];
+            let decodedJwtJsonData = window.atob(jwtData);
+            let decodedJwtData = JSON.parse(decodedJwtJsonData);
+
+            let roles = []
+            Object.keys(decodedJwtData)
+                .forEach(key => {
+                    if (key.match(/.*role$/)) { roles = decodedJwtData[key] }
+                })
+            //console.log(roles);
+            return roles === "Admin";
+        }
+        return false;
+    }
     
     return {
+        isLoggedIn: isLoggedIn,
         clearToken: clearToken,
         getUsername: getUsername,
         saveUsername: saveUsername,

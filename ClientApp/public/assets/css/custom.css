@@ -276,8 +276,54 @@ ul li.nocheckmark:before {
     .profile-item div {
         padding-top: 2px;
     }
+
+    .member-item.style-1 .lab-inner .lab-content{
+        min-height:120px;
+    }
+
+     .fa-heart-red {
+        color: red;
+    }
+     .fa-people-group-green{
+        color:green;
+    }
+    .profile-item-icons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+        padding:20px 20px;
+
+    }
+
     /*Profile list*/
 
+.friendship-request-container{
 
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    font-size:small;
+}
 
-    
+.friendship-request-sender {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    justify-content: center;
+}
+.friendship-request-sender-time {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    justify-content:flex-end;
+    align-items:center;
+    font-size:smaller;
+}
+.friendship-request-sender-date{
+
+    margin-left:5px;
+}
+.friend-request-count {
+    margin-left: 2px;
+}

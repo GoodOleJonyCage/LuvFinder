@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { LoadingDiv } from './LoadingDiv'
+import { ActivityFriends } from './ActivityFriends'
 import { LoadUserProfile, SaveProfile, LoadUserInfo, LoadCountries, LoadRegions, LoadCities, LoadMaritalStatuses, LoadGenders } from '../Services/Services'
+import { PendingFriendRequests } from './PendingFriendRequests'
 import { UserStore } from './UserStore'
 import { useNavigate } from "react-router-dom"
 import { Autocomplete, TextField } from '@mui/material';
+
 import Calendar from 'react-calendar';
 
 export const EditProfile = () => {
@@ -571,11 +574,7 @@ export const EditProfile = () => {
                                                                 Favorites</button>
                                                         </li>
                                                         <li className="nav-item" role="presentation">
-                                                            <button className="nav-link" id="pills-friends-tab"
-                                                                data-bs-toggle="pill" data-bs-target="#pills-friends"
-                                                                type="button" role="tab" aria-controls="pills-friends"
-                                                                aria-selected="false"><i className="icofont-favourite"></i>
-                                                                Friends</button>
+                                                            <PendingFriendRequests></PendingFriendRequests>
                                                         </li>
                                                         <li className="nav-item" role="presentation">
                                                             <button className="nav-link" id="pills-groups-tab"
@@ -1328,224 +1327,7 @@ export const EditProfile = () => {
                                                         </div>
                                                         <div className="tab-pane fade" id="pills-friends" role="tabpanel"
                                                             aria-labelledby="pills-friends-tab">
-
-                                                            {/* post item */}
-                                                            <div className="post-item mb-20">
-                                                                {/* post-content */}
-                                                                <div className="post-content">
-                                                                    {/* post-author */}
-                                                                    <div className="post-author">
-                                                                        <div className="post-author-inner">
-                                                                            <div className="author-thumb">
-                                                                                <img src="assets/images/profile/dp.png"
-                                                                                    alt="img" />
-                                                                            </div>
-                                                                            <div className="author-details">
-                                                                                <h6><a href="#">William Smith</a></h6>
-                                                                                <ul className="post-status">
-                                                                                    <li className="post-privacy"><i
-                                                                                        className="icofont-world"></i>
-                                                                                        Public</li>
-                                                                                    <li className="post-time">6 Mintues Ago
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    {/*post-description */}
-                                                                    <div className="post-description">
-                                                                        <p>Quickly deliver going forward methods info
-                                                                            create empowerment before client-centered
-                                                                            bandwdth
-                                                                            Credibly pontficate interoperable leadership
-                                                                            skills ands B2B data awesome Continually
-                                                                            whiteboard
-                                                                            ands B2B data awesome Continually whiteboard
-
-                                                                        </p>
-                                                                        <div className="post-desc-img">
-                                                                            <div className="row g-3">
-                                                                                <div className="col-md-6">
-                                                                                    <img src="assets/images/profile/post-image/02.jpg"
-                                                                                        alt="img" />
-                                                                                </div>
-                                                                                <div className="col-md-6">
-                                                                                    <img src="assets/images/profile/post-image/03.jpg"
-                                                                                        alt="img" />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                {/* post meta */}
-                                                                <div className="post-meta">
-                                                                    <div className="post-meta-top">
-                                                                        <p><a href="#"><i className="icofont-like"></i> <i
-                                                                            className="icofont-heart"></i> <i
-                                                                                className="icofont-laughing"></i>
-                                                                            <span>Julia,
-                                                                                Petrova and 306 like this</span></a>
-                                                                        </p>
-                                                                        <p>
-                                                                            <a href="#">136 Comments</a>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="post-meta-bottom">
-                                                                        <ul className="react-list">
-                                                                            <li className="react"><a href="#"><i
-                                                                                className="icofont-like"></i>
-                                                                                Like</a> </li>
-                                                                            <li className="react"><a href="#">
-                                                                                <i
-                                                                                    className="icofont-speech-comments"></i>
-                                                                                Comment
-                                                                            </a></li>
-                                                                            <li className="react"><a href="#">
-                                                                                <i className="icofont-share"></i> Share
-                                                                            </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            {/* post item */}
-                                                            <div className="post-item mb-20">
-                                                                {/* post-content */}
-                                                                <div className="post-content">
-                                                                    {/*post-author */}
-                                                                    <div className="post-author">
-                                                                        <div className="post-author-inner">
-                                                                            <div className="author-thumb">
-                                                                                <img src="assets/images/profile/dp.png"
-                                                                                    alt="img" />
-                                                                            </div>
-                                                                            <div className="author-details">
-                                                                                <h6><a href="#">William Smith</a></h6>
-                                                                                <ul className="post-status">
-                                                                                    <li className="post-privacy"><i
-                                                                                        className="icofont-world"></i>
-                                                                                        Public</li>
-                                                                                    <li className="post-time">6 Mintues Ago
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    {/* post-description */}
-                                                                    <div className="post-description">
-                                                                        <p>Quickly deliver going forward methods info
-                                                                            create empowerment before client-centered
-                                                                            bandwdth
-                                                                            Credibly pontficate interoperable leadership
-                                                                            skills ands B2B data awesome Continually
-                                                                            whiteboard
-                                                                            ands B2B data awesome Continually whiteboard
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                {/* post meta */}
-                                                                <div className="post-meta">
-                                                                    <div className="post-meta-top">
-                                                                        <p><a href="#"><i className="icofont-like"></i> <i
-                                                                            className="icofont-heart"></i> <i
-                                                                                className="icofont-laughing"></i>
-                                                                            <span>Julia,
-                                                                                Petrova and 306 like this</span></a>
-                                                                        </p>
-                                                                        <p>
-                                                                            <a href="#">136 Comments</a>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="post-meta-bottom">
-                                                                        <ul className="react-list">
-                                                                            <li className="react"><a href="#"><i
-                                                                                className="icofont-like"></i>
-                                                                                Like</a> </li>
-                                                                            <li className="react"><a href="#">
-                                                                                <i
-                                                                                    className="icofont-speech-comments"></i>
-                                                                                Comment
-                                                                            </a></li>
-                                                                            <li className="react"><a href="#">
-                                                                                <i className="icofont-share"></i> Share
-                                                                            </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            {/* post item */}
-                                                            <div className="post-item mb-20">
-                                                                {/* post-content */}
-                                                                <div className="post-content">
-                                                                    {/* post-author */}
-                                                                    <div className="post-author">
-                                                                        <div className="post-author-inner">
-                                                                            <div className="author-thumb">
-                                                                                <img src="assets/images/profile/dp.png"
-                                                                                    alt="img" />
-                                                                            </div>
-                                                                            <div className="author-details">
-                                                                                <h6><a href="#">William Smith</a></h6>
-                                                                                <ul className="post-status">
-                                                                                    <li className="post-privacy"><i
-                                                                                        className="icofont-world"></i>
-                                                                                        Public</li>
-                                                                                    <li className="post-time">6 Mintues Ago
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    {/* post-description */}
-                                                                    <div className="post-description">
-                                                                        <p>Quickly deliver going forward methods info
-                                                                            create empowerment before client-centered
-                                                                            bandwdth
-                                                                            Credibly pontficate interoperable leadership
-                                                                            skills ands B2B data awesome Continually
-                                                                            whiteboard
-                                                                            ands B2B data awesome Continually whiteboard
-
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                {/* post meta */}
-                                                                <div className="post-meta">
-                                                                    <div className="post-meta-top">
-                                                                        <p><a href="#"><i className="icofont-like"></i> <i
-                                                                            className="icofont-heart"></i> <i
-                                                                                className="icofont-laughing"></i>
-                                                                            <span>Julia,
-                                                                                Petrova and 306 like this</span></a>
-                                                                        </p>
-                                                                        <p>
-                                                                            <a href="#">136 Comments</a>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="post-meta-bottom">
-                                                                        <ul className="react-list">
-                                                                            <li className="react"><a href="#"><i
-                                                                                className="icofont-like"></i>
-                                                                                Like</a> </li>
-                                                                            <li className="react"><a href="#">
-                                                                                <i
-                                                                                    className="icofont-speech-comments"></i>
-                                                                                Comment
-                                                                            </a></li>
-                                                                            <li className="react"><a href="#">
-                                                                                <i className="icofont-share"></i> Share
-                                                                            </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="load-btn">
-                                                                <a href="#" className="lab-btn">Load More Post <i
-                                                                    className="icofont-spinner"></i></a>
-                                                            </div>
+                                                            <ActivityFriends username={getUsername()}></ActivityFriends>
                                                         </div>
                                                         <div className="tab-pane fade" id="pills-groups" role="tabpanel"
                                                             aria-labelledby="pills-groups-tab">

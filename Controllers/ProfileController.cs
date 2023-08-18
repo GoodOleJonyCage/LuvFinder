@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using NuGet.Packaging.Signing;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LuvFinder.Controllers
@@ -174,9 +175,20 @@ namespace LuvFinder.Controllers
             var username = userParams.GetProperty("username").ToString();
             var userID = (new UserController(new LuvFinderContext(), _config)).UserIDByName(username);
 
-            var userinfo = db.UserInfos.Where(u => u.UserId == userID)
+            ViewModels.UserInfo? userinfo = GetUserInfo(userID);
+
+            if (userinfo == null)
+                return BadRequest("User profile not found");
+
+            return Ok(userinfo);
+        }
+
+        private ViewModels.UserInfo? GetUserInfo(int userID)
+        {
+            var userinfo =  db.UserInfos.Where(u => u.UserId == userID)
                 .Select(info => new ViewModels.UserInfo()
                 {
+                    UserName =info.User.Username??string.Empty,
                     LastName = info.LastName ?? string.Empty,
                     FirstName = info.FirstName ?? string.Empty,
                     GenderID = info.GenderId ?? 0,
@@ -189,7 +201,6 @@ namespace LuvFinder.Controllers
                     CityID = info.CityId,
                     RegionID = info.RegionId,
                 }).SingleOrDefault();
-
             if (userinfo != null)
             {
                 userinfo.Gender = db.UserGenders.Where(g => g.Id == userinfo.GenderID).SingleOrDefault()?.Gender ?? string.Empty;
@@ -199,10 +210,7 @@ namespace LuvFinder.Controllers
                 userinfo.RegionName = db.Regions?.Where(c => c.Id == userinfo.RegionID).SingleOrDefault()?.Name ?? string.Empty;
                 userinfo.CityName = db.Cities?.Where(c => c.Id == userinfo.CityID).SingleOrDefault()?.Name ?? string.Empty;
             }
-            else
-                return BadRequest("User profile not found");
-
-            return Ok(userinfo);
+            return userinfo;
         }
 
         [HttpGet]
@@ -357,7 +365,6 @@ namespace LuvFinder.Controllers
             return Ok(true);
         }
 
-
         [HttpGet]
         [Route("maritalstatuses")]
         public ActionResult MaritalStatuses()
@@ -386,11 +393,11 @@ namespace LuvFinder.Controllers
             return Ok(lst);
         }
 
-
         [HttpGet]
         [Route("profiles")]
         public ActionResult GetProfiles()
         {
+            //put icon status in this call instead of making separte calls for each profile
             var lst =(from u in db.Users join i in db.UserInfos on u.Id equals i.UserId
             select new ViewModels.UserInfo()
             {
@@ -419,6 +426,166 @@ namespace LuvFinder.Controllers
 
             
             return Ok(lst);
+        }
+
+
+        [HttpPost]
+        [Route("friendrequestcount")]
+        public ActionResult GetFriendRequestCount([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var usernameTo = userParams.GetProperty("usernameto").ToString();
+            var userIDTo = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameTo);
+            var count = 0;
+            try
+            {
+                count = db.UserLikes.Count(l => l.ToId == userIDTo && 
+                                                l.LikeAccepted == false );
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+
+            return Ok(count);
+        }
+
+        [HttpPost]
+        [Route("likeuser")]
+        public ActionResult LikeUser([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var usernameFrom = userParams.GetProperty("usernamefrom").ToString();
+            var usernameTo = userParams.GetProperty("usernameto").ToString();
+            
+            var userIDFrom = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameFrom);
+            var userIDTo = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameTo);
+
+            try
+            {
+                if (!db.UserLikes.Any(l => l.FromId == userIDFrom && l.ToId == userIDTo))
+                {
+                    db.UserLikes.Add(new UserLike()
+                    {
+                        FromId = userIDFrom,
+                        ToId = userIDTo,
+                    });
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+            
+            return Ok(true);
+        }
+
+        [HttpPost]
+        [Route("likeuserstatus")]
+        public ActionResult LikeUserStatus([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var usernameFrom = userParams.GetProperty("usernamefrom").ToString();
+            var usernameTo = userParams.GetProperty("usernameto").ToString();
+
+            var userIDFrom = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameFrom);
+            var userIDTo = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameTo);
+
+            var hasLiked = false;
+
+            try
+            {
+                hasLiked = db.UserLikes.Any(l => l.FromId == userIDFrom && l.ToId == userIDTo);
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+
+            return Ok(hasLiked);
+        }
+
+        [HttpPost]
+        [Route("activityfriends")]
+        public ActionResult ActivityFriends([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var usernameTo = userParams.GetProperty("usernameto").ToString();
+            var userIDTo = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameTo);
+
+            var lst = new List<FriendActivity>();
+
+            try
+            {
+                lst = db.UserLikes
+                          .Where(l => l.ToId == userIDTo)
+                          .OrderBy( l => l.Date)
+                          .Select(l => new FriendActivity()
+                          {
+                              FromID = l.FromId,
+                              ToID = l.ToId,
+                              Date = l.Date,
+                              LikeAccepted = l.LikeAccepted??false,
+                             LikeAcceptedDate = l.LikeAcceptedDate 
+
+                          }).ToList();
+
+                lst.ForEach(l =>
+                {
+                    l.FromUserInfo = GetUserInfo(l.FromID);
+                    l.ToUserInfo = GetUserInfo(l.ToID);
+                 });
+
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+
+            return Ok(lst);
+        }
+
+        [HttpPost]
+        [Route("startfriendship")]
+        public ActionResult StartFriendShip([Microsoft.AspNetCore.Mvc.FromBody] System.Text.Json.JsonElement userParams)
+        {
+            var usernameFrom = userParams.GetProperty("usernamefrom").ToString();
+            var usernameTo = userParams.GetProperty("usernameto").ToString();
+
+            var userIDFrom = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameFrom);
+            var userIDTo = (new UserController(new LuvFinderContext(), _config)).UserIDByName(usernameTo);
+            
+            var activity = new FriendActivity();
+            
+            try
+            {
+                var entry  = db.UserLikes.Where(l => l.FromId == userIDFrom && l.ToId == userIDTo)
+                            .SingleOrDefault();
+
+                if (entry != null)
+                {
+                    entry.LikeAccepted = true;
+                    entry.LikeAcceptedDate = DateTime.Now;
+                    db.SaveChanges();
+                }
+
+                  activity = db.UserLikes.Where(l => l.FromId == userIDFrom && l.ToId == userIDTo)
+                        .Select(l => new FriendActivity()
+                         {
+                             FromID = l.FromId,
+                             ToID = l.ToId,
+                             Date = l.Date,
+                             LikeAccepted = l.LikeAccepted ?? false,
+                             LikeAcceptedDate = l.LikeAcceptedDate
+                         })
+                        .SingleOrDefault();
+                
+                if(activity!= null)
+                    activity.FromUserInfo = GetUserInfo(activity.FromID);
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc.Message);
+            }
+
+            return Ok(activity);
         }
 
         private int CalculateAge(DateTime birthdate)

@@ -8,17 +8,11 @@ public partial class LuvFinderContext : DbContext
 {
     public LuvFinderContext()
     {
-        //this.Database.SetCommandTimeout(TimeSpan.FromSeconds(0));
     }
 
     public LuvFinderContext(DbContextOptions<LuvFinderContext> options)
         : base(options)
     {
-        //set enf timeout to infinity, the city dropdown needs to be 
-        //reprogrammed as the result set is too large 
-        //The miu auto complete controls loads all values at once
-        //we need to find a way to match the first three letters of teh typed word
-        this.Database.SetCommandTimeout(TimeSpan.FromSeconds(0));
     }
 
     public virtual DbSet<Answer> Answers { get; set; }
@@ -259,6 +253,8 @@ public partial class LuvFinderContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.FromId).HasColumnName("FromID");
+            entity.Property(e => e.LikeAccepted).HasDefaultValueSql("((0))");
+            entity.Property(e => e.LikeAcceptedDate).HasColumnType("datetime");
             entity.Property(e => e.ToId).HasColumnName("ToID");
 
             entity.HasOne(d => d.From).WithMany(p => p.UserLikeFroms)

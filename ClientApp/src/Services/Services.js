@@ -1,3 +1,116 @@
+export const FriendRequestCount = async ( tousername) => {
+
+    let response = await fetch(`profile/friendrequestcount`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            usernameto: tousername
+        }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const StartFriendShip = async (fromusername, tousername) => {
+
+    let response = await fetch(`profile/startfriendship`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            usernamefrom: fromusername,
+            usernameto: tousername
+        }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const GetActivityFriends = async (tousername) => {
+
+    let response = await fetch(`profile/activityfriends`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            usernameto: tousername
+        }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const GetLikeUserStatus = async (fromusername, tousername) => {
+
+    let response = await fetch(`profile/likeuserstatus`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            usernamefrom: fromusername,
+            usernameto: tousername
+        }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
+export const LikeUser = async (fromusername, tousername) => {
+
+    let response = await fetch(`profile/likeuser`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            //'Authorization': "Bearer " + getJwtToken()
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            usernamefrom : fromusername  ,
+            usernameto   :tousername 
+        }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        return data;
+    }
+
+    throw response;
+}
+
 export const LoadGenders = async () => {
 
     let response = await fetch(`profile/genders`, {

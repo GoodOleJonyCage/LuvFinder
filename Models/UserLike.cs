@@ -13,6 +13,10 @@ public partial class UserLike
 
     public DateTime Date { get; set; }
 
+    public bool? LikeAccepted { get; set; }
+
+    public DateTime? LikeAcceptedDate { get; set; }
+
     public virtual User From { get; set; } = null!;
 
     public virtual User To { get; set; } = null!;
