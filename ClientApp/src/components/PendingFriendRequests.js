@@ -1,12 +1,22 @@
-﻿import { useState, useEffect } from 'react'
+﻿import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { FriendRequestCount } from '../Services/Services'
 import { UserStore } from './UserStore'
 
-export const PendingFriendRequests = () => {
+export const PendingFriendRequests = forwardRef((props, ref) => {
+
+    //reload data once again friendship occurss
+    //to show the correct number of pending friend reqeusts
+    useImperativeHandle(ref, () => ({
+        reloadData() {
+            loadData();
+            //console.log('reloadData called');
+        }
+    }));
 
     const { getUsername } = UserStore();
     const [count, setcount] = useState(0);
     const loadData = async () => {
+        //console.log('loadData called');
         let cnt = await FriendRequestCount(getUsername());    
         setcount(cnt);
     }
@@ -21,7 +31,7 @@ export const PendingFriendRequests = () => {
             data-bs-toggle="pill" data-bs-target="#pills-friends"
             type="button" role="tab" aria-controls="pills-friends"
             aria-selected="false"><i className="icofont-favourite"></i>
-            Friends<span className="item-number friend-request-count">({count})</span></button>
+            Pending Friend Requests<span className="item-number friend-request-count">({count})</span></button>
         </>
 
-}
+});

@@ -207,7 +207,7 @@ export const LoadCities = async (regionid) => {
     throw response;
 }
 
-export const LoadProfiles = async () => {
+export const LoadProfiles = async (username) => {
 
     let response = await fetch(`profile/profiles`, {
         headers: {
@@ -215,8 +215,8 @@ export const LoadProfiles = async () => {
             'Accept': 'application/json',
             //'Authorization': "Bearer " + getJwtToken()
         },
-        //method: 'POST',
-        //body: JSON.stringify({ quizid: quizid }),
+         method: 'POST',
+        body: JSON.stringify({ username: username }),
     });
 
     if (response.ok) {

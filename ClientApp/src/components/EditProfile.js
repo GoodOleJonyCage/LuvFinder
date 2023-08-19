@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { LoadingDiv } from './LoadingDiv'
 import { ActivityFriends } from './ActivityFriends'
 import { LoadUserProfile, SaveProfile, LoadUserInfo, LoadCountries, LoadRegions, LoadCities, LoadMaritalStatuses, LoadGenders } from '../Services/Services'
@@ -11,6 +11,7 @@ import Calendar from 'react-calendar';
 
 export const EditProfile = () => {
 
+    const ref_pendingFriendRequests = useRef(null);
     //profile questions
     const [questions, setquestions] = useState([]);
     //basic info
@@ -402,7 +403,7 @@ export const EditProfile = () => {
         </>
     }
     //components
-
+    
     return <section className="profile-section padding-tb">
         <div className="container">
             <div className="section-wrapper">
@@ -574,7 +575,7 @@ export const EditProfile = () => {
                                                                 Favorites</button>
                                                         </li>
                                                         <li className="nav-item" role="presentation">
-                                                            <PendingFriendRequests></PendingFriendRequests>
+                                                            <PendingFriendRequests ref={ref_pendingFriendRequests} ></PendingFriendRequests>
                                                         </li>
                                                         <li className="nav-item" role="presentation">
                                                             <button className="nav-link" id="pills-groups-tab"
@@ -1327,7 +1328,11 @@ export const EditProfile = () => {
                                                         </div>
                                                         <div className="tab-pane fade" id="pills-friends" role="tabpanel"
                                                             aria-labelledby="pills-friends-tab">
-                                                            <ActivityFriends username={getUsername()}></ActivityFriends>
+                                                            <ActivityFriends
+                                                                reloadData_pendingFriendRequests={() => {
+                                                                    ref_pendingFriendRequests.current.reloadData();
+                                                                }}
+                                                                username={getUsername()}></ActivityFriends>
                                                         </div>
                                                         <div className="tab-pane fade" id="pills-groups" role="tabpanel"
                                                             aria-labelledby="pills-groups-tab">

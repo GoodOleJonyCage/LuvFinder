@@ -17,15 +17,19 @@ const ActivityFriend = (props) => {
             let newactivity = await StartFriendShip(activity.fromUserInfo.userName, getUsername());
             if (newactivity) {
                 setactivity(newactivity);
+                //update number of pending friend requests
+                props.reloadData_pendingFriendRequests();
             }
         } catch (e) {
 
             e.json().then(error => { seterror(error) });
         }
     }
-
+     
+    
     return <>
         {activity.fromUserInfo === null ?  <></> :
+            
             <div className="post-item mb-20">
                 <div className="post-content">
                     <div className="post-author">
@@ -88,12 +92,12 @@ export const ActivityFriends = (props) => {
     useEffect(() => {
         loadData();
     }, []);
-
+    
     return <>
         {
             activities.length === 0 ? <LoadingDiv></LoadingDiv> :
                 activities.map((activity, index) => {
-                    return <ActivityFriend key={index} activity={activity} ></ActivityFriend>
+                    return <ActivityFriend reloadData_pendingFriendRequests={props.reloadData_pendingFriendRequests} key={index} activity={activity} ></ActivityFriend>
                 })
         }
     </>;

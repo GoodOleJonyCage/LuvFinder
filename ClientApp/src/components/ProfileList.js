@@ -3,17 +3,19 @@ import { useState, useEffect } from 'react'
 import { LoadProfiles } from '../Services/Services'
 import { LoadingDiv } from './LoadingDiv'
 import { ProfileIcons } from './ProfileIcons'
+import { UserStore } from './UserStore'
 
 export const ProfileList = () => {
 
     const [loaded, setloaded] = useState(false);
     const [profiles, setprofiles] = useState([]);
     const navigate = useNavigate();
+    const { getUsername } = UserStore();
 
     const LoadData = async () => {
 
         try {
-            let vm = await LoadProfiles();
+            let vm = await LoadProfiles(getUsername());
             //console.log(vm);
             setprofiles(vm);
             setloaded(true);
@@ -38,7 +40,7 @@ export const ProfileList = () => {
                             </div>
                             <div className="lab-content profile-item">
                                 <h6>{props.profile.firstName + " " + props.profile.lastName} </h6>
-                                <div>{props.profile.userName}</div>
+                                {/*<div>{props.profile.userName}</div>*/}
                                 <div className="profile-item-maritalstatus">
                                     <div >{props.profile.maritalStatus} {props.profile.gender} ({props.profile.age})</div>
                                     <div className="profile-item-maritalstatus-seeking">seeking</div>

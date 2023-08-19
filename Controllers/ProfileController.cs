@@ -393,12 +393,15 @@ namespace LuvFinder.Controllers
             return Ok(lst);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("profiles")]
-        public ActionResult GetProfiles()
+        public ActionResult GetProfiles([FromBody] System.Text.Json.JsonElement param)
         {
-            //put icon status in this call instead of making separte calls for each profile
+            var username = param.GetProperty("username").ToString();
+
+            //select all profiles except the user if logged in
             var lst =(from u in db.Users join i in db.UserInfos on u.Id equals i.UserId
+                      where u.Username != (string.IsNullOrEmpty(username) ? string.Empty : username)
             select new ViewModels.UserInfo()
             {
                 UserName = u.Username,
@@ -424,7 +427,6 @@ namespace LuvFinder.Controllers
                 entry.RegionName = db.Regions.Where(r => r.Id == entry.RegionID).SingleOrDefault()?.Name ?? string.Empty;
             });
 
-            
             return Ok(lst);
         }
 
