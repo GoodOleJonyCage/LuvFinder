@@ -520,9 +520,9 @@ export const EditProfile = () => {
                                 <button className="nav-link" id="nav-friends-tab" data-bs-toggle="tab"
                                     data-bs-target="#friends" type="button" role="tab" aria-controls="friends"
                                     aria-selected="false">Friends <span className="item-number">16</span></button>
-                                <button className="nav-link" id="nav-groups-tab" data-bs-toggle="tab"
-                                    data-bs-target="#groups" type="button" role="tab" aria-controls="groups"
-                                    aria-selected="false">Groups <span className="item-number">06</span></button>
+                                <button className="nav-link" id="nav-messages-tab" data-bs-toggle="tab"
+                                    data-bs-target="#messages" type="button" role="tab" aria-controls="messages"
+                                    aria-selected="false">Messages <span className="item-number">06</span></button>
                                 <button className="nav-link" id="nav-photos-tab" data-bs-toggle="tab"
                                     data-bs-target="#photos" type="button" role="tab" aria-controls="photos"
                                     aria-selected="false">Photos</button>
@@ -578,20 +578,13 @@ export const EditProfile = () => {
                                                             <PendingFriendRequests ref={ref_pendingFriendRequests} ></PendingFriendRequests>
                                                         </li>
                                                         <li className="nav-item" role="presentation">
-                                                            <button className="nav-link" id="pills-groups-tab"
-                                                                data-bs-toggle="pill" data-bs-target="#pills-groups"
-                                                                type="button" role="tab" aria-controls="pills-groups"
+                                                            <button className="nav-link" id="pills-messages-tab"
+                                                                data-bs-toggle="pill" data-bs-target="#pills-messages"
+                                                                type="button" role="tab" aria-controls="pills-messages"
                                                                 aria-selected="false"><i className="icofont-users"></i>
-                                                                Groups</button>
+                                                                Messages</button>
                                                         </li>
-                                                        <li className="custom-select">
-                                                            <select>
-                                                                <option value="1">Everything</option>
-                                                                <option value="2">Recent</option>
-                                                                <option value="3">Relevant</option>
-                                                                <option value="4">Popular</option>
-                                                            </select>
-                                                        </li>
+                                                        
                                                     </ul>
                                                     <div className="tab-content activity-content" id="pills-tabContent">
                                                         <div className="tab-pane fade" id="pills-personal" role="tabpanel"
@@ -1334,8 +1327,8 @@ export const EditProfile = () => {
                                                                 }}
                                                                 username={getUsername()}></ActivityFriends>
                                                         </div>
-                                                        <div className="tab-pane fade" id="pills-groups" role="tabpanel"
-                                                            aria-labelledby="pills-groups-tab">
+                                                        <div className="tab-pane fade" id="pills-messages" role="tabpanel"
+                                                            aria-labelledby="pills-messages-tab">
                                                             {/* post item */}
                                                             <div className="post-item mb-20">
                                                                 {/* post-content */}
@@ -2478,7 +2471,7 @@ export const EditProfile = () => {
                                                                 <div
                                                                     className="lab-inner d-flex flex-wrap align-items-center">
                                                                     <div className="lab-content w-100">
-                                                                        <h6>Active Group A1</h6>
+                                                                        <h6>Active Group A12</h6>
                                                                         <p>Colabors atively fabcate best breed and
                                                                             apcations through visionary</p>
                                                                         <ul className="img-stack d-flex">
@@ -2541,7 +2534,7 @@ export const EditProfile = () => {
                                 </div>
                             </div>
                             {/* Group Tab */}
-                            <div className="tab-pane fade" id="groups" role="tabpanel" aria-labelledby="nav-groups-tab">
+                            <div className="tab-pane fade" id="messages" role="tabpanel" aria-labelledby="nav-messages-tab">
                                 <div>
                                     <div className="row">
                                         <div className="col-xl-8">
@@ -2549,214 +2542,78 @@ export const EditProfile = () => {
                                                 <div className="row gy-3">
                                                     <div className="col-12">
                                                         <div className="group-item lab-item style-1">
-                                                            <div
-                                                                className="lab-inner d-flex flex-wrap align-items-center p-4">
-                                                                <div className="lab-thumb me-md-4 mb-4 mb-md-0">
-                                                                    <img src="assets/images/group/group-page/01.jpg"
-                                                                        alt="img" />
-                                                                </div>
-                                                                <div className="lab-content">
-                                                                    <h4>Active Group A2</h4>
-                                                                    <p>Colabors atively fabcate best breed and
-                                                                        apcations through visionary value </p>
-                                                                    <ul className="img-stack d-flex">
-                                                                        <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li className="bg-theme">12+</li>
+                                                            <div className="lab-inner d-flex flex-wrap align-items-center p-4">
+
+                                                                <div id="comments" className="comments">
+                                                                    <div className="widget-title">
+                                                                        <h3>02 Comments</h3>
+                                                                    </div>
+                                                                    <ul className="comment-list">
+                                                                        <li className="comment" id="li-comment-2">
+                                                                            <div className="com-image">
+                                                                                <img alt="" src="assets/images/member/02.jpg" className="avatar avatar-90 photo" height="90" width="90"/>
+                                                                            </div>
+                                                                            <div className="com-content">
+                                                                                <div className="com-title">
+                                                                                    <div className="com-title-meta">
+                                                                                        <h4><a href="#" rel="external nofollow" className="url">Rassel
+                                                                                            Hossain</a></h4>
+                                                                                        <span> October 5, 2021 at 12:41 pm </span>
+                                                                                    </div>
+                                                                                    <span className="reply">
+                                                                                        <a rel="nofollow" className="comment-reply-link" href="#"><i className="icofont-reply-all"></i>
+                                                                                            Reply</a>
+                                                                                    </span>
+                                                                                </div>
+                                                                                <p>The inner sanctuary, I throw myself down among the tall grass bye the
+                                                                                    trckli stream and, as I lie close to the earth</p>
+                                                                            </div>
+                                                                            <ul className="comment-list">
+                                                                                <li className="comment even thread-even depth-1 comment" id="li-comment-3">
+                                                                                    <div className="com-image">
+                                                                                        <img alt="" src="assets/images/member/03.jpg" className="avatar avatar-90 photo" height="90" width="90"/>
+                                                                                    </div>
+                                                                                    <div className="com-content">
+                                                                                        <div className="com-title">
+                                                                                            <div className="com-title-meta">
+                                                                                                <h4><a href="http://Sk" rel="external nofollow" className="url">William Khanna</a></h4>
+                                                                                                <span> October 5, 2021 at 12:41 pm </span>
+                                                                                            </div>
+                                                                                            <span className="reply">
+                                                                                                <a rel="nofollow" className="comment-reply-link" href="#"><i className="icofont-reply-all"></i> Reply</a>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <p>A wonderful serenity has taken possession of my entire soul, like
+                                                                                            these sweet mornings spring which I enjoy with my whole heart
+                                                                                        </p>
+                                                                                        <div className="reply-btn">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
                                                                     </ul>
-                                                                    <div className="test"> <a href="profile.html"
-                                                                        className="lab-btn"> <i
-                                                                            className="icofont-users-alt-5"></i>
-                                                                        View Group</a></div>
                                                                 </div>
+
+                                                                <div id="respond" className="comment-respond">
+                                                                    <div className="add-comment">
+                                                                        <div className="widget-title">
+                                                                            <h3>Leave a Comment</h3>
+                                                                        </div>
+                                                                        <div action="#" method="post" id="commentform" className="comment-form" novalidate="">
+                                                                            <input className="comment-input" name="author" type="text" value="" placeholder="Full Name" />
+                                                                            <input className="comment-input" name="email" type="text" value="" placeholder="Your Email" />
+                                                                            <input className="comment-input subject w-100" name="url" type="text" value="" placeholder="Subject" />
+                                                                            <textarea className="comment-input" id="comment-reply" name="comment" cols="45" rows="5" placeholder="Type Here Message" aria-required="true"></textarea>
+                                                                            <button className="lab-btn" type="submit"><span>Send Comment</span></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="col-12">
-                                                        <div className="group-item lab-item style-1">
-                                                            <div
-                                                                className="lab-inner d-flex flex-wrap align-items-center p-4">
-                                                                <div className="lab-thumb me-md-4 mb-4 mb-md-0">
-                                                                    <img src="assets/images/group/group-page/02.jpg"
-                                                                        alt="img" />
-                                                                </div>
-                                                                <div className="lab-content">
-                                                                    <h4>Active Group A2</h4>
-                                                                    <p>Colabors atively fabcate best breed and
-                                                                        apcations through visionary value </p>
-                                                                    <ul className="img-stack d-flex">
-                                                                        <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li className="bg-theme">12+</li>
-                                                                    </ul>
-                                                                    <div className="test"> <a href="profile.html"
-                                                                        className="lab-btn"> <i
-                                                                            className="icofont-users-alt-5"></i>
-                                                                        View Group</a></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div className="group-item lab-item style-1">
-                                                            <div
-                                                                className="lab-inner d-flex flex-wrap align-items-center p-4">
-                                                                <div className="lab-thumb me-md-4 mb-4 mb-md-0">
-                                                                    <img src="assets/images/group/group-page/03.jpg"
-                                                                        alt="img" />
-                                                                </div>
-                                                                <div className="lab-content">
-                                                                    <h4>Active Group A2</h4>
-                                                                    <p>Colabors atively fabcate best breed and
-                                                                        apcations through visionary value </p>
-                                                                    <ul className="img-stack d-flex">
-                                                                        <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li className="bg-theme">12+</li>
-                                                                    </ul>
-                                                                    <div className="test"> <a href="profile.html"
-                                                                        className="lab-btn"> <i
-                                                                            className="icofont-users-alt-5"></i>
-                                                                        View Group</a></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div className="group-item lab-item style-1">
-                                                            <div
-                                                                className="lab-inner d-flex flex-wrap align-items-center p-4">
-                                                                <div className="lab-thumb me-md-4 mb-4 mb-md-0">
-                                                                    <img src="assets/images/group/group-page/04.jpg"
-                                                                        alt="img" />
-                                                                </div>
-                                                                <div className="lab-content">
-                                                                    <h4>Active Group A2</h4>
-                                                                    <p>Colabors atively fabcate best breed and
-                                                                        apcations through visionary value </p>
-                                                                    <ul className="img-stack d-flex">
-                                                                        <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li className="bg-theme">12+</li>
-                                                                    </ul>
-                                                                    <div className="test"> <a href="profile.html"
-                                                                        className="lab-btn"> <i
-                                                                            className="icofont-users-alt-5"></i>
-                                                                        View Group</a></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div className="group-item lab-item style-1">
-                                                            <div
-                                                                className="lab-inner d-flex flex-wrap align-items-center p-4">
-                                                                <div className="lab-thumb me-md-4 mb-4 mb-md-0">
-                                                                    <img src="assets/images/group/group-page/05.jpg"
-                                                                        alt="img" />
-                                                                </div>
-                                                                <div className="lab-content">
-                                                                    <h4>Active Group A2</h4>
-                                                                    <p>Colabors atively fabcate best breed and
-                                                                        apcations through visionary value </p>
-                                                                    <ul className="img-stack d-flex">
-                                                                        <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li className="bg-theme">12+</li>
-                                                                    </ul>
-                                                                    <div className="test"> <a href="profile.html"
-                                                                        className="lab-btn"> <i
-                                                                            className="icofont-users-alt-5"></i>
-                                                                        View Group</a></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        <div className="group-item lab-item style-1">
-                                                            <div
-                                                                className="lab-inner d-flex flex-wrap align-items-center p-4">
-                                                                <div className="lab-thumb me-md-4 mb-4 mb-md-0">
-                                                                    <img src="assets/images/group/group-page/02.jpg"
-                                                                        alt="img" />
-                                                                </div>
-                                                                <div className="lab-content">
-                                                                    <h4>Active Group A2</h4>
-                                                                    <p>Colabors atively fabcate best breed and
-                                                                        apcations through visionary value </p>
-                                                                    <ul className="img-stack d-flex">
-                                                                        <li><img src="assets/images/group/group-mem/01.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/02.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/03.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/04.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/05.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li><img src="assets/images/group/group-mem/06.png"
-                                                                            alt="member-img" /></li>
-                                                                        <li className="bg-theme">12+</li>
-                                                                    </ul>
-                                                                    <div className="test"> <a href="profile.html"
-                                                                        className="lab-btn"> <i
-                                                                            className="icofont-users-alt-5"></i>
-                                                                        View Group</a></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
                                                 </div>
                                             </article>
                                         </div>

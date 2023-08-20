@@ -15,6 +15,10 @@ public partial class UserMessage
 
     public DateTime? Date { get; set; }
 
+    public bool? MessageRead { get; set; }
+
+    public DateTime? MessageReadDate { get; set; }
+
     public virtual User From { get; set; } = null!;
 
     public virtual User To { get; set; } = null!;

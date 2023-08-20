@@ -73,6 +73,8 @@ public partial class LuvFinderContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Cities__3214EC074A6A2D20");
 
+            entity.HasIndex(e => e.RegionId, "IDX_Cities_RegionId");
+
             entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
@@ -248,6 +250,8 @@ public partial class LuvFinderContext : DbContext
         {
             entity.HasIndex(e => e.FromId, "IDX_UserLikes_FromID");
 
+            entity.HasIndex(e => e.ToId, "IDX_UserLikes_ToId");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
@@ -282,6 +286,8 @@ public partial class LuvFinderContext : DbContext
         {
             entity.HasIndex(e => e.FromId, "IDX_UserMessages_FromID");
 
+            entity.HasIndex(e => e.ToId, "IDX_UserMessages_ToId");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Date)
                 .HasDefaultValueSql("(getdate())")
@@ -290,6 +296,8 @@ public partial class LuvFinderContext : DbContext
             entity.Property(e => e.Message)
                 .HasMaxLength(2000)
                 .IsUnicode(false);
+            entity.Property(e => e.MessageRead).HasDefaultValueSql("((0))");
+            entity.Property(e => e.MessageReadDate).HasColumnType("datetime");
             entity.Property(e => e.ToId).HasColumnName("ToID");
 
             entity.HasOne(d => d.From).WithMany(p => p.UserMessageFroms)
