@@ -1,14 +1,3 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { MemoryRouter } from 'react-router-dom';
-import App from './App';
-
-it('renders without crashing', async () => {
-  const div = document.createElement('div');
-  const root = createRoot(div);
-  root.render(
-    <MemoryRouter>
-      <App />
-    </MemoryRouter>);
-  await new Promise(resolve => setTimeout(resolve, 1000));
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:746056b4d0f9afbd3a54c091bdfc6f7001d80a7d7c869654289bd46e17c0682b
+size 404

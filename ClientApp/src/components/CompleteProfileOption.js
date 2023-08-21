@@ -1,16 +1,3 @@
-﻿import { useNavigate, useLocation } from "react-router-dom";
-
-export const CompleteProfileOption = (props) => {
-
-
-    const navigate = useNavigate();
-    //get username from path
-    const location = useLocation();
-    let { username } = location.state;
-    //get username from path
-
-    return <div class="container">
-            <div className="highlight-error text-center">{props.infoerror}</div>
-            <p className="text-center"><button className="lab-btn" onClick={(e) => { navigate('/createprofile', { state: { username: username } }); }}>Complete your Registration</button></p>
-          </div>
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:669ee5a8014e9ad956a4063650af3a858bd431be07361805345e0d020542113c
+size 612

@@ -1,23 +1,3 @@
-import React, { Component } from 'react';
-/*import { Container } from 'reactstrap';*/
-import { Header } from './Header';
-import { Footer } from './Footer';
-/*import { NavMenu } from './NavMenu';*/
-
-export class Layout extends Component {
-    static displayName = Layout.name;
-
-    render() {
-        return (
-            <>
-                <Header></Header>
-                {/* <NavMenu />*/}
-                {/*<Container>*/}
-                {/*    {this.props.children}*/}
-                {/*</Container>*/}
-                {this.props.children}
-                <Footer></Footer>
-            </>
-        );
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:64fe994882a202e24517ba06c499fbc8691ec4435089edd54f4c1e2ea71f1be6
+size 617

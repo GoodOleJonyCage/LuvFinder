@@ -1,13 +1,3 @@
-namespace LuvFinder
-{
-    public class WeatherForecast
-    {
-        public DateTime Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-        public string? Summary { get; set; }
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3c234acbc93f1bb3df0b9842b19d65260615efaf16f136ab3381693736b4f773
+size 275

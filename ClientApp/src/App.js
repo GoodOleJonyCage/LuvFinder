@@ -1,24 +1,3 @@
-import React, { Component } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import AppRoutes from './AppRoutes';
-import { Layout } from './components/Layout';
-//import { HomePage } from "./Pages/HomePage";
-//import { ProfilePage } from "./Pages/ProfilePage"
-
-export default class App extends Component {
-  static displayName = App.name;
-
-  render() {
-    return (
-      <Layout>
-        <Routes>
-            {
-            AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
-        </Routes>
-      </Layout>
-    );
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:eeeaf0b8bdd692c3395c0d7d082fb1aaf144799fb1b23e8276cdfd3a59372659
+size 1237

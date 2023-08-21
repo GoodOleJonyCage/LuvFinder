@@ -1,16 +1,3 @@
-﻿namespace LuvFinder.ViewModels
-{
-    public class FriendActivity
-    {
-        public int FromID { get; set; } 
-        public UserInfo? FromUserInfo { get; set; }
-
-        public int ToID { get; set; } 
-        public UserInfo? ToUserInfo { get; set; } 
-
-        public DateTime? Date { get; set; } 
-
-        public bool? LikeAccepted { get; set; }
-        public DateTime? LikeAcceptedDate { get; set; }
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d56adbca0606ba310ccea17e65c21706fc78d9c5cf44564378d27cc3a755927d
+size 417
